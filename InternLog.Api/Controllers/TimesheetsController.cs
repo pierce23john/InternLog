@@ -1,6 +1,7 @@
 ﻿using InternLog.Api.Contracts.V1;
-using InternLog.Api.Contracts.V1.Requests;
-using InternLog.Api.Contracts.V1.Responses;
+using InternLog.Api.Contracts.V1.Requests.Timesheets;
+using InternLog.Api.Contracts.V1.Responses.Timesheets;
+using InternLog.Api.Controllers.Base;
 using InternLog.Api.Domain.Entities;
 using InternLog.Api.Services.Contracts;
 using Mapster;
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InternLog.Api.Controllers
 {
-    public class TimesheetsController : ControllerBase
+    public class TimesheetsController : ApiControllerBase
     {
         private readonly ITimesheetService _timesheetService;
 
@@ -35,14 +36,14 @@ namespace InternLog.Api.Controllers
             return Ok(timesheet);
         }
 
-        [HttpPost(ApiRoutes.Timesheets.Create)]
-        public async Task<IActionResult> CreateAsync([FromBody] CreateTimesheetRequest createTimesheetRequest)
-        {
-            var timesheet = createTimesheetRequest.Adapt<Timesheet>();
-            await _timesheetService.CreateTimesheetAsync(timesheet);
+        //[HttpPost(ApiRoutes.Timesheets.Create)]
+        //public async Task<IActionResult> CreateAsync([FromBody] CreateTimesheetRequest createTimesheetRequest)
+        //{
+        //    var timesheet = createTimesheetRequest.Adapt<Timesheet>();
+        //    await _timesheetService.CreateTimesheetAsync(timesheet);
 
-            return CreatedAtRoute("GetTimesheetById", new { id = timesheet.Id }, timesheet.Adapt<CreateTimesheetResponse>());
-        }
+        //    return CreatedAtRoute("GetTimesheetById", new { id = timesheet.Id }, timesheet.Adapt<CreateTimesheetResponse>());
+        //}
 
         [HttpPut(ApiRoutes.Timesheets.FullUpdate)]
         public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, UpdateTimesheetRequest updateTimesheetRequest)

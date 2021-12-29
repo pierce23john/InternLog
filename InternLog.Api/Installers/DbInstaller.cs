@@ -13,7 +13,7 @@ namespace InternLog.Api.Installers
             services.AddDbContext<SqlDataContext>(options => options.UseSqlServer(connectionString));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            //services.AddScoped<ITimesheetService, TimesheetService>();
+            services.AddScoped<ITimesheetService, TimesheetService>();
             return Task.CompletedTask;
         }
     }

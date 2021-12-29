@@ -1,4 +1,4 @@
-﻿namespace InternLog.Api.Contracts.V1.Requests
+﻿namespace InternLog.Api.Contracts.V1.Requests.Timesheets
 {
     public class CreateTimesheetRequest
     {

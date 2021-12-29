@@ -1,4 +1,4 @@
-﻿namespace InternLog.Api.Contracts.V1.Responses
+﻿namespace InternLog.Api.Contracts.V1.Responses.Timesheets
 {
     public class CreateTimesheetResponse
     {

@@ -1,4 +1,6 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using InternLog.Api.Services.Concretes;
+using InternLog.Api.Services.Contracts;
+using Microsoft.OpenApi.Models;
 
 namespace InternLog.Api.Installers
 {
@@ -8,6 +10,7 @@ namespace InternLog.Api.Installers
         {
             services.AddControllers();
             services.AddEndpointsApiExplorer();
+            services.AddScoped<IIdentityService, IdentityService>();
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo() { Title = "InternLog API", Version = "v1" });

@@ -1,10 +1,11 @@
 ﻿using InternLog.Api.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace InternLog.Api.Data
 {
-    public class SqlDataContext : IdentityDbContext
+    public class SqlDataContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
         public SqlDataContext(DbContextOptions<SqlDataContext> options)
             : base(options)

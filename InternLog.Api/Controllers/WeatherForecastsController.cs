@@ -1,8 +1,10 @@
 using InternLog.Api.Contracts.V1;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InternLog.Api.Controllers
 {
+    [Authorize]
     public class WeatherForecastsController : ControllerBase
     {
         private static readonly string[] Summaries = new[]

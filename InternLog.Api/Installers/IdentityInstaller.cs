@@ -1,4 +1,5 @@
 ﻿using InternLog.Api.Data;
+using InternLog.Api.Domain.Entities;
 using InternLog.Api.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -36,7 +37,7 @@ namespace InternLog.Api.Installers
             });
 
             services
-                .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<SqlDataContext>();
 
             return Task.CompletedTask;
