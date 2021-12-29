@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "InternLog.WebUI", "InternLog.WebUI\InternLog.WebUI.esproj", "{5C0499AC-100A-4FB5-BF54-EA781A1D1423}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternLog.Api", "InternLog.Api\InternLog.Api.csproj", "{6348DBEA-3D14-4B0D-B56D-3EDF205C0012}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5C0499AC-100A-4FB5-BF54-EA781A1D1423}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C0499AC-100A-4FB5-BF54-EA781A1D1423}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C0499AC-100A-4FB5-BF54-EA781A1D1423}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{5C0499AC-100A-4FB5-BF54-EA781A1D1423}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C0499AC-100A-4FB5-BF54-EA781A1D1423}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C0499AC-100A-4FB5-BF54-EA781A1D1423}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{6348DBEA-3D14-4B0D-B56D-3EDF205C0012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6348DBEA-3D14-4B0D-B56D-3EDF205C0012}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6348DBEA-3D14-4B0D-B56D-3EDF205C0012}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6348DBEA-3D14-4B0D-B56D-3EDF205C0012}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {00D6DE78-5C44-421B-83A5-62097899B61B}
+	EndGlobalSection
+EndGlobal
