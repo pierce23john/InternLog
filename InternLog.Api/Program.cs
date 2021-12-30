@@ -1,4 +1,4 @@
-using InternLog.Api.Installers;
+using InternLog.Api.Extensions;
 using InternLog.Api.Options;
 
 var builder = WebApplication.CreateBuilder(args);

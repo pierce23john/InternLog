@@ -1,4 +1,6 @@
-﻿namespace InternLog.Api.Installers
+﻿using InternLog.Api.Installers;
+
+namespace InternLog.Api.Extensions
 {
     public static class InstallerExtensions
     {
@@ -8,7 +10,7 @@
             .Where(type => !type.IsInterface && type.IsAssignableTo(typeof(IServiceInstaller)) && !type.IsAbstract)
             .Select(Activator.CreateInstance).Cast<IServiceInstaller>().ToList();
 
-            installers.ForEach(installer =>  installer.InstallAsync(services, configuration));
+            installers.ForEach(installer => installer.InstallAsync(services, configuration));
         }
     }
 }

@@ -1,9 +1,8 @@
 ﻿using Humanizer;
-using InternLog.Api.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace InternLog.Api.Data
+namespace InternLog.Api.Extensions
 {
     public static class ModelBuilderExtensions
     {

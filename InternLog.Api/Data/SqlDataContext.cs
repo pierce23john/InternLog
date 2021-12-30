@@ -1,4 +1,5 @@
 ﻿using InternLog.Api.Domain.Entities;
+using InternLog.Api.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
