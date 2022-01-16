@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InternLog.Api.Services.Concretes
 {
-    public class TimesheetService : ITimesheetService
+    public class TimesheetService : ITimesheetService, IUserOwnedEntityService<ApplicationUser, Timesheet>
     {
         private readonly SqlDataContext _dataContext;
         public TimesheetService(SqlDataContext dataContext)
@@ -48,6 +48,18 @@ namespace InternLog.Api.Services.Concretes
             _dataContext.Set<Timesheet>().Update(timesheetToUpdate);
             var updated = await _dataContext.SaveChangesAsync();
             return updated > 0;
+        }
+
+        public async Task<bool> UserOwnsEntityAsync(Guid id, Guid userId)
+        {
+            var timesheet = _dataContext.Set<Timesheet>().AsNoTracking().FirstOrDefault(x => x.Id == id);
+
+            if (timesheet == null) 
+            {
+                return false;
+            }
+
+            return timesheet.UserId == userId;
         }
     }
 }

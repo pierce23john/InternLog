@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using InternLog.Api.Domain.Entities.Base;
+using Microsoft.AspNetCore.Identity;
 
 namespace InternLog.Api.Domain.Entities
 {
-    public class ApplicationUser : IdentityUser<Guid>
+    public class ApplicationUser : IdentityUser<Guid>, IEntity
     {
         public ICollection<Timesheet> Timesheets { get; set; } = new List<Timesheet>();
 

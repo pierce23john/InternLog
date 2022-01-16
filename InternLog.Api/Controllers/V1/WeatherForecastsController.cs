@@ -2,7 +2,7 @@ using InternLog.Api.Contracts.V1;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace InternLog.Api.Controllers
+namespace InternLog.Api.Controllers.V1
 {
     [Authorize]
     public class WeatherForecastsController : ControllerBase
@@ -19,7 +19,7 @@ namespace InternLog.Api.Controllers
             _logger = logger;
         }
 
-        [HttpGet(ApiRoutes.WeatherForecasts.GetAll, Name = "GetWeatherForecasts")]
+        [HttpGet(ApiV1Routes.WeatherForecasts.GetAll, Name = "GetWeatherForecasts")]
         public ActionResult<IEnumerable<WeatherForecast>> GetAll()
         {
             return Ok(Enumerable.Range(1, 5).Select(index => new WeatherForecast

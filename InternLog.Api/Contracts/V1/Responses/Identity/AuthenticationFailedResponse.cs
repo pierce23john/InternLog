@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InternLog.Api.Contracts.V1.Responses.Identity
 {
-    public class LoginFailedResponse
+    public class AuthenticationFailedResponse
     {
         public IEnumerable<string> Errors { get; set; }
     }

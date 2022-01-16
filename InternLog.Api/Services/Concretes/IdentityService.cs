@@ -14,11 +14,13 @@ namespace InternLog.Api.Services.Concretes
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly JwtOptions _jwtOptions;
+        private readonly TokenValidationParameters _tokenValidationParameters;
 
-        public IdentityService(SignInManager<ApplicationUser> signInManager, JwtOptions jwtOptions)
+        public IdentityService(SignInManager<ApplicationUser> signInManager, JwtOptions jwtOptions, TokenValidationParameters tokenValidationParameters)
         {
             _signInManager = signInManager;
             _jwtOptions = jwtOptions;
+            _tokenValidationParameters = tokenValidationParameters;
         }
 
         public async Task<AuthenticationResult> RegisterAsync(string username, string password)
@@ -138,6 +140,36 @@ namespace InternLog.Api.Services.Concretes
             {
                 Success = true,
             };
+        }
+
+        public Task<AuthenticationResult> RefreshTokenAsync(string token, string refreshToken)
+        {
+            return null;
+        }
+
+        private ClaimsPrincipal GetPrincipalFromToken(string token) 
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            try
+            {
+                var principal = tokenHandler.ValidateToken(token, _tokenValidationParameters, out var validatedToken);
+                if (!IsJwtWithValidSecurityAlgorithm(validatedToken))
+                {
+                    return null;
+                }
+                return principal;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        private bool IsJwtWithValidSecurityAlgorithm(SecurityToken validatedToken) 
+        {
+            return validatedToken is JwtSecurityToken jwtSecurityToken 
+                && jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

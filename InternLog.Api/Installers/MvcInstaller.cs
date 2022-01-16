@@ -1,4 +1,6 @@
-﻿using InternLog.Api.Services.Concretes;
+﻿using FluentValidation.AspNetCore;
+using InternLog.Api.Contracts.V1.Requests.Timesheets;
+using InternLog.Api.Services.Concretes;
 using InternLog.Api.Services.Contracts;
 using Microsoft.OpenApi.Models;
 
@@ -8,15 +10,28 @@ namespace InternLog.Api.Installers
     {
         public Task InstallAsync(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddControllers();
+            services.AddControllers(mvcOptions =>
+            {
+
+            }).AddFluentValidation(fluentValidationOptions =>
+            {
+                fluentValidationOptions.DisableDataAnnotationsValidation = true;
+                fluentValidationOptions.RegisterValidatorsFromAssembly(typeof(CreateTimesheetRequestValidator).Assembly);
+            }).AddJsonOptions(jsonOptions =>
+            {
+                jsonOptions.UseDateOnlyTimeOnlyStringConverters();
+            });
+
+
             services.AddEndpointsApiExplorer();
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddSwaggerGen(options =>
             {
+                options.UseDateOnlyTimeOnlyStringConverters();
+
                 options.SwaggerDoc("v1", new OpenApiInfo() { Title = "InternLog API", Version = "v1" });
 
-
-                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme 
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey,
