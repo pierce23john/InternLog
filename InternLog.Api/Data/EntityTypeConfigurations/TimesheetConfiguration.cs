@@ -1,4 +1,4 @@
-﻿using InternLog.Api.Domain.Entities;
+﻿using InternLog.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

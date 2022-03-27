@@ -1,4 +1,4 @@
-﻿namespace InternLog.Api.Domain.Entities.Base
+﻿namespace InternLog.Domain.Entities.Base
 {
     public abstract class EntityBase : IEntity
     {

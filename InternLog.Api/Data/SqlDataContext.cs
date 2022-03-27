@@ -1,5 +1,6 @@
-﻿using InternLog.Api.Domain.Entities;
-using InternLog.Api.Extensions;
+﻿using InternLog.Api.Extensions;
+using InternLog.Domain.Entities;
+using InternLog.Domain.Entities.Base;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,7 @@ namespace InternLog.Api.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.RegisterEntitiesFromAssembly(typeof(SqlDataContext).Assembly);
+            builder.RegisterEntitiesFromAssembly(typeof(IEntity).Assembly);
             builder.ApplyConfigurationsFromAssembly(typeof(SqlDataContext).Assembly);
         }
 

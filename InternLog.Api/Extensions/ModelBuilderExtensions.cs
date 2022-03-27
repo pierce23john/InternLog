@@ -8,7 +8,7 @@ namespace InternLog.Api.Extensions
     {
         public static void RegisterEntitiesFromAssembly(this ModelBuilder builder, Assembly assembly)
         {
-            var entityTypes = EntityExtensions.GetEntitiesFromAssembly(assembly);
+            var entityTypes = assembly.GetEntitiesFromAssembly();
 
             entityTypes.ForEach(entity => builder.Entity(entity)
                                                  .ToTable(entity.Name.Pluralize(inputIsKnownToBeSingular: false)));

@@ -1,4 +1,4 @@
-﻿using InternLog.Api.Domain.Entities;
+﻿using InternLog.Domain.Entities;
 
 namespace InternLog.Api.Services.Contracts
 {
@@ -9,5 +9,6 @@ namespace InternLog.Api.Services.Contracts
         Task<Timesheet> CreateTimesheetAsync(Timesheet timesheet);
         Task<bool> UpdateTimesheetAsync(Timesheet timesheetToUpdate);
         Task<bool> DeleteTimesheetAsync(Guid id);
+        Task<bool> DeleteAllTimesheetsForUserAsync(Guid userId);
     }
 }

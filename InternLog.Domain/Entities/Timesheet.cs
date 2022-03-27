@@ -1,7 +1,6 @@
-﻿using InternLog.Api.Domain.Entities.Base;
-using Microsoft.AspNetCore.Identity;
+﻿using InternLog.Domain.Entities.Base;
 
-namespace InternLog.Api.Domain.Entities
+namespace InternLog.Domain.Entities
 {
     public class Timesheet : EntityBase, IUserOwnedEntity
     {

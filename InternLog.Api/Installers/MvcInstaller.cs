@@ -12,7 +12,7 @@ namespace InternLog.Api.Installers
         {
             services.AddControllers(mvcOptions =>
             {
-
+                mvcOptions.UseDateOnlyTimeOnlyStringConverters();
             }).AddFluentValidation(fluentValidationOptions =>
             {
                 fluentValidationOptions.DisableDataAnnotationsValidation = true;
@@ -22,9 +22,10 @@ namespace InternLog.Api.Installers
                 jsonOptions.UseDateOnlyTimeOnlyStringConverters();
             });
 
-
+            services.AddHttpContextAccessor();
             services.AddEndpointsApiExplorer();
-            services.AddScoped<IIdentityService, IdentityService>();
+            services.AddScoped<ILinkGeneratorService, LinkGeneratorService>();
+
             services.AddSwaggerGen(options =>
             {
                 options.UseDateOnlyTimeOnlyStringConverters();

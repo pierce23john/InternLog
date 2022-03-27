@@ -1,6 +1,6 @@
 ﻿using InternLog.Api.Data;
-using InternLog.Api.Domain.Entities;
 using InternLog.Api.Services.Contracts;
+using InternLog.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace InternLog.Api.Services.Concretes
@@ -33,6 +33,18 @@ namespace InternLog.Api.Services.Concretes
             var deleted = await _dataContext.SaveChangesAsync();
             return deleted > 0;
         }
+
+        public async Task<bool> DeleteAllTimesheetsForUserAsync(Guid userId)
+        {
+            var timesheetsForUser = await _dataContext.Set<Timesheet>()
+                                        .Where(timesheet => timesheet.UserId == userId).ToListAsync();
+
+            _dataContext.Set<Timesheet>().RemoveRange(timesheetsForUser);
+
+            var deletedRows = await _dataContext.SaveChangesAsync();
+
+            return deletedRows > 0;
+        }
         public async Task<Timesheet> GetTimesheetByIdAsync(Guid id)
         {
             return await _dataContext.Set<Timesheet>().FindAsync(id);
@@ -43,23 +55,23 @@ namespace InternLog.Api.Services.Concretes
             return await _dataContext.Set<Timesheet>().AsNoTracking().ToListAsync();
         }
 
-        public async Task<bool> UpdateTimesheetAsync(Timesheet timesheetToUpdate) 
+        public async Task<bool> UpdateTimesheetAsync(Timesheet timesheetToUpdate)
         {
             _dataContext.Set<Timesheet>().Update(timesheetToUpdate);
             var updated = await _dataContext.SaveChangesAsync();
             return updated > 0;
         }
 
-        public async Task<bool> UserOwnsEntityAsync(Guid id, Guid userId)
+        public Task<bool> UserOwnsEntityAsync(Guid id, Guid userId)
         {
             var timesheet = _dataContext.Set<Timesheet>().AsNoTracking().FirstOrDefault(x => x.Id == id);
 
-            if (timesheet == null) 
+            if (timesheet == null)
             {
-                return false;
+                return Task.FromResult(false);
             }
 
-            return timesheet.UserId == userId;
+            return Task.FromResult(timesheet.UserId == userId);
         }
     }
 }

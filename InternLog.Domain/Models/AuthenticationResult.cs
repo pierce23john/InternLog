@@ -1,4 +1,4 @@
-﻿namespace InternLog.Api.Domain.Models
+﻿namespace InternLog.Domain.Models
 {
     public class AuthenticationResult
     {

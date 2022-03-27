@@ -1,6 +1,6 @@
-﻿using InternLog.Api.Domain.Entities.Base;
+﻿using InternLog.Domain.Entities.Base;
 
-namespace InternLog.Api.Domain.Entities
+namespace InternLog.Domain.Entities
 {
     public class RefreshToken : EntityBase, IUserOwnedEntity
     {

@@ -2,18 +2,19 @@
 using InternLog.Api.Contracts.V1.Requests.Timesheets;
 using InternLog.Api.Contracts.V1.Responses.Timesheets;
 using InternLog.Api.Controllers.Base;
-using InternLog.Api.Domain.Entities;
 using InternLog.Api.Services.Contracts;
+using InternLog.Domain.Entities;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InternLog.Api.Controllers.V1
 {
-    public class TimesheetsController : ApiControllerBase
+    public class TimesheetsV1Controller : ApiControllerBase
     {
         private readonly ITimesheetService _timesheetService;
 
-        public TimesheetsController(ITimesheetService timesheetService)
+        public TimesheetsV1Controller(ITimesheetService timesheetService)
         {
             _timesheetService = timesheetService;
         }
@@ -46,7 +47,7 @@ namespace InternLog.Api.Controllers.V1
         }
 
         [HttpPut(ApiV1Routes.Timesheets.FullUpdate)]
-        public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, UpdateTimesheetRequest updateTimesheetRequest)
+        public async Task<IActionResult> UpdateAsync(UpdateTimesheetRequest updateTimesheetRequest)
         {
             var timesheet = updateTimesheetRequest.Adapt<Timesheet>();
 
@@ -69,6 +70,19 @@ namespace InternLog.Api.Controllers.V1
                 return NotFound();
             }
             return NoContent();
+        }
+
+        [HttpDelete(nameof(ApiV1Routes.Timesheets.DeleteAllForUser))]
+        [Authorize(Policy = "DeleteTimesheetForUser")]
+        public async Task<IActionResult> DeleteAllTimesheetsForUserAsync(Guid userId)
+        {
+            var deleted = await _timesheetService.DeleteAllTimesheetsForUserAsync(userId);
+
+            if (!deleted)
+            {
+                return NotFound();
+            }
+            return BadRequest();
         }
     }
 }

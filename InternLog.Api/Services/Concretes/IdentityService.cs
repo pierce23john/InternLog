@@ -1,8 +1,12 @@
-﻿using InternLog.Api.Domain.Entities;
-using InternLog.Api.Domain.Models;
+﻿using InternLog.Api.Controllers.V1;
+using InternLog.Api.Data;
 using InternLog.Api.Options;
 using InternLog.Api.Services.Contracts;
+using InternLog.Domain.Entities;
+using InternLog.Domain.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -15,17 +19,25 @@ namespace InternLog.Api.Services.Concretes
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly JwtOptions _jwtOptions;
         private readonly TokenValidationParameters _tokenValidationParameters;
+        private readonly SqlDataContext _dataContext;
+        private readonly IEmailService _emailService;
+        private readonly ILinkGeneratorService _linkGeneratorService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public IdentityService(SignInManager<ApplicationUser> signInManager, JwtOptions jwtOptions, TokenValidationParameters tokenValidationParameters)
+        public IdentityService(SignInManager<ApplicationUser> signInManager, JwtOptions jwtOptions, TokenValidationParameters tokenValidationParameters, SqlDataContext dataContext, IEmailService emailService, ILinkGeneratorService linkGeneratorService)
         {
             _signInManager = signInManager;
             _jwtOptions = jwtOptions;
             _tokenValidationParameters = tokenValidationParameters;
+            _dataContext = dataContext;
+            _emailService = emailService;
+            _linkGeneratorService = linkGeneratorService;
+            _userManager = signInManager.UserManager;
         }
 
         public async Task<AuthenticationResult> RegisterAsync(string username, string password)
         {
-            var existingUser = await _signInManager.UserManager.FindByEmailAsync(username);
+            var existingUser = await _userManager.FindByEmailAsync(username);
 
             if (existingUser is not null)
             {
@@ -37,10 +49,11 @@ namespace InternLog.Api.Services.Concretes
 
             ApplicationUser newUser = new(username)
             {
-                Email = username
+                Email = username,
+                EmailConfirmed = true,
             };
 
-            var registerResult = await _signInManager.UserManager.CreateAsync(newUser, password);
+            var registerResult = await _userManager.CreateAsync(newUser, password);
 
             if (!registerResult.Succeeded)
             {
@@ -50,36 +63,20 @@ namespace InternLog.Api.Services.Concretes
                 };
             }
 
-            return GenerateAuthenticationResult(newUser);
+            var claim = new Claim("timesheets.deleteforuser", "true", ClaimValueTypes.Boolean);
+
+            var addClaimResult =  await _userManager.AddClaimAsync(newUser, claim);
+
+            var emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+
+            var confirmationLink = await _linkGeneratorService.GenerateConfirmationEmailLink(newUser.Id, emailConfirmationToken);
+
+            await _emailService.SendEmailAsync(newUser.Email, "Verify your Email", $"<a href='{confirmationLink}'>Click here to verify</a>");
+            return await GenerateAuthenticationResultForUserAsync(newUser);
         }
-
-        private AuthenticationResult GenerateAuthenticationResult(ApplicationUser newUser)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var tokenDescriptor = new SecurityTokenDescriptor()
-            {
-                Subject = new ClaimsIdentity(new List<Claim>
-                {
-                    new Claim("id", newUser.Id.ToString()),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Sub, newUser.Email),
-                    new Claim(JwtRegisteredClaimNames.Email, newUser.Email),
-                }),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Secret)), SecurityAlgorithms.HmacSha256Signature),
-                Expires = DateTime.UtcNow.AddHours(2),
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return new AuthenticationResult()
-            {
-                Success = true,
-                Token = tokenHandler.WriteToken(token)
-            };
-        }
-
         public async Task<AuthenticationResult> LoginAsync(string email, string password)
         {
-            var existingUser = await _signInManager.UserManager.FindByEmailAsync(email);
+            var existingUser = await _userManager.FindByEmailAsync(email);
 
             if (existingUser is null)
             {
@@ -105,12 +102,12 @@ namespace InternLog.Api.Services.Concretes
                 };
             }
 
-            return GenerateAuthenticationResult(existingUser);
+            return await GenerateAuthenticationResultForUserAsync(existingUser);
         }
 
-        public async Task<AuthenticationResult> ConfirmEmailAsync(string email, string token)
+        public async Task<AuthenticationResult> ConfirmEmailAsync(Guid userId, string token)
         {
-            var existingUser = await _signInManager.UserManager.FindByNameAsync(email);
+            var existingUser = await _userManager.FindByIdAsync(userId.ToString());
 
             if (existingUser is null)
             {
@@ -123,7 +120,7 @@ namespace InternLog.Api.Services.Concretes
                 };
             }
 
-            var confirmationResult = await _signInManager.UserManager.ConfirmEmailAsync(existingUser, token);
+            var confirmationResult = await _userManager.ConfirmEmailAsync(existingUser, token);
 
             if (!confirmationResult.Succeeded)
             {
@@ -142,12 +139,102 @@ namespace InternLog.Api.Services.Concretes
             };
         }
 
-        public Task<AuthenticationResult> RefreshTokenAsync(string token, string refreshToken)
+        public async Task<AuthenticationResult> RefreshTokenAsync(string token, string refreshToken)
         {
-            return null;
+            var principal = GetPrincipalFromToken(token);
+
+            if (principal == null)
+            {
+                return new AuthenticationResult { Errors = new[] { "Invalid Token" } };
+            }
+
+            long expiryDateInUnix = Convert.ToInt64(principal.FindFirstValue(JwtRegisteredClaimNames.Exp));
+
+            var expiryDateTimeUtc = DateTime.UnixEpoch.AddSeconds(expiryDateInUnix);
+
+            if (expiryDateTimeUtc > DateTime.UtcNow)
+            {
+                return new AuthenticationResult() { Errors = new[] { "This token hasn't expired yet" } };
+            }
+
+            var storedRefreshToken = await _dataContext.Set<RefreshToken>().SingleOrDefaultAsync(refreshTokenInDb => refreshTokenInDb.Id == Guid.Parse(refreshToken));
+
+            if (storedRefreshToken == null)
+            {
+                return new AuthenticationResult() { Errors = new[] { "This token doesn't exist." } };
+            }
+
+
+            if (DateTime.UtcNow > storedRefreshToken.ExpiryDate)
+            {
+                return new AuthenticationResult() { Errors = new[] { "This refresh token is expired." } };
+            }
+
+            if (storedRefreshToken.Invalidated)
+            {
+                return new AuthenticationResult() { Errors = new[] { "This refresh token has been invalidated" } };
+            }
+
+            if (storedRefreshToken.Used)
+            {
+                return new AuthenticationResult() { Errors = new[] { "This refresh token has been used" } };
+            }
+
+            var jwtId = principal.FindFirstValue(JwtRegisteredClaimNames.Jti);
+            if (storedRefreshToken.JwtId != jwtId)
+            {
+                return new AuthenticationResult() { Errors = new[] { "This refresh token does not match this JWT." } };
+            }
+
+            storedRefreshToken.Used = true;
+            _dataContext.Update(storedRefreshToken);
+            await _dataContext.SaveChangesAsync();
+
+            var user = await _userManager.FindByIdAsync(principal.FindFirstValue("id"));
+
+            return await GenerateAuthenticationResultForUserAsync(user);
+
         }
 
-        private ClaimsPrincipal GetPrincipalFromToken(string token) 
+        private async Task<AuthenticationResult> GenerateAuthenticationResultForUserAsync(ApplicationUser user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor()
+            {
+                Subject = new ClaimsIdentity(new List<Claim>
+                {
+                    new Claim("id", user.Id.ToString()),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                }),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Secret)), SecurityAlgorithms.HmacSha256Signature),
+                Expires = DateTime.UtcNow.Add(_jwtOptions.TokenLifetime),
+            };
+
+            var token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
+
+            RefreshToken refreshToken = new()
+            {
+                JwtId = token.Id,
+                CreationDate = DateTime.UtcNow,
+                UserId = user.Id,
+                ExpiryDate = DateTime.UtcNow.AddMonths(6),
+            };
+
+            await _dataContext.AddAsync(refreshToken);
+            await _dataContext.SaveChangesAsync();
+
+            return new AuthenticationResult()
+            {
+                Success = true,
+                Token = tokenHandler.WriteToken(token),
+                RefreshToken = refreshToken.Id.ToString()
+            };
+        }
+
+
+        private ClaimsPrincipal GetPrincipalFromToken(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -166,9 +253,9 @@ namespace InternLog.Api.Services.Concretes
             }
         }
 
-        private bool IsJwtWithValidSecurityAlgorithm(SecurityToken validatedToken) 
+        private bool IsJwtWithValidSecurityAlgorithm(SecurityToken validatedToken)
         {
-            return validatedToken is JwtSecurityToken jwtSecurityToken 
+            return validatedToken is JwtSecurityToken jwtSecurityToken
                 && jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase);
         }
     }
