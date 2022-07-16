@@ -1,8 +1,7 @@
 ﻿using DateOnlyTimeOnly.AspNet.Converters;
 using FluentAssertions;
-using InternLog.Api.Contracts.V1;
-using InternLog.Api.Contracts.V1.Requests.Timesheets;
-using InternLog.Api.Contracts.V1.Responses.Timesheets;
+using InternLog.Api.Features.V1;
+using InternLog.Api.Features.V1.Timesheets.CreateTimesheet;
 using System;
 using System.Collections.Generic;
 using System.Net;

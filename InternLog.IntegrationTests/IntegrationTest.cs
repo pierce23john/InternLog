@@ -1,4 +1,3 @@
-using InternLog.Api.Contracts.V1;
 using InternLog.Api.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -8,11 +7,12 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Net.Http.Json;
-using InternLog.Api.Contracts.V1.Requests.Identity;
-using InternLog.Api.Contracts.V1.Responses.Identity;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System;
+using InternLog.Api.Features.V1;
+using InternLog.Api.Features.V1.Identity.Login;
+using InternLog.Api.Features.V1.Identity.Register;
 
 namespace InternLog.IntegrationTests
 {
@@ -53,7 +53,7 @@ namespace InternLog.IntegrationTests
             });
 
             response.EnsureSuccessStatusCode();
-            var tokenResponse = await response.Content.ReadFromJsonAsync<AuthenticationSuccessResponse>();
+            var tokenResponse = await response.Content.ReadFromJsonAsync<LoginUserSuccessResponse>();
             return tokenResponse.Token;
         }
 
