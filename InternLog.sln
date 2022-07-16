@@ -3,15 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "InternLog.WebUI", "InternLog.WebUI\InternLog.WebUI.esproj", "{5C0499AC-100A-4FB5-BF54-EA781A1D1423}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InternLog.Api", "InternLog.Api\InternLog.Api.csproj", "{6348DBEA-3D14-4B0D-B56D-3EDF205C0012}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InternLog.Domain", "InternLog.Domain\InternLog.Domain.csproj", "{469D8AD2-BB0B-48B6-A3BC-66C95EDB6296}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{443E7D86-A34C-42C7-8FE1-92C182327A64}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternLog.IntegrationTests", "InternLog.IntegrationTests\InternLog.IntegrationTests.csproj", "{CA1EAAB0-0D1E-40DB-A00E-15809ADEFA57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InternLog.IntegrationTests", "InternLog.IntegrationTests\InternLog.IntegrationTests.csproj", "{CA1EAAB0-0D1E-40DB-A00E-15809ADEFA57}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,12 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5C0499AC-100A-4FB5-BF54-EA781A1D1423}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C0499AC-100A-4FB5-BF54-EA781A1D1423}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C0499AC-100A-4FB5-BF54-EA781A1D1423}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{5C0499AC-100A-4FB5-BF54-EA781A1D1423}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C0499AC-100A-4FB5-BF54-EA781A1D1423}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5C0499AC-100A-4FB5-BF54-EA781A1D1423}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{6348DBEA-3D14-4B0D-B56D-3EDF205C0012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6348DBEA-3D14-4B0D-B56D-3EDF205C0012}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6348DBEA-3D14-4B0D-B56D-3EDF205C0012}.Release|Any CPU.ActiveCfg = Release|Any CPU
