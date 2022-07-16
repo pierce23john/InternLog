@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InternLog.Domain", "InternL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InternLog.IntegrationTests", "InternLog.IntegrationTests\InternLog.IntegrationTests.csproj", "{CA1EAAB0-0D1E-40DB-A00E-15809ADEFA57}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "clientapp", "clientapp\clientapp.esproj", "{F1D07694-814A-4D90-BF49-599369C77F47}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,12 @@ Global
 		{CA1EAAB0-0D1E-40DB-A00E-15809ADEFA57}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA1EAAB0-0D1E-40DB-A00E-15809ADEFA57}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA1EAAB0-0D1E-40DB-A00E-15809ADEFA57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1D07694-814A-4D90-BF49-599369C77F47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1D07694-814A-4D90-BF49-599369C77F47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1D07694-814A-4D90-BF49-599369C77F47}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F1D07694-814A-4D90-BF49-599369C77F47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1D07694-814A-4D90-BF49-599369C77F47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1D07694-814A-4D90-BF49-599369C77F47}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
