@@ -1,11 +1,5 @@
-﻿using InternLog.Api.Contracts.V1;
-using InternLog.Api.Controllers.V1;
+﻿using InternLog.Api.Features.V1;
 using InternLog.Api.Services.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InternLog.Api.Services.Concretes
 {

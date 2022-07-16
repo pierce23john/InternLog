@@ -1,16 +1,14 @@
-﻿using InternLog.Api.Controllers.V1;
+﻿using FastEndpoints.Security;
 using InternLog.Api.Data;
 using InternLog.Api.Options;
 using InternLog.Api.Services.Contracts;
 using InternLog.Domain.Entities;
 using InternLog.Domain.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace InternLog.Api.Services.Concretes
 {
@@ -198,25 +196,26 @@ namespace InternLog.Api.Services.Concretes
 
         private async Task<AuthenticationResult> GenerateAuthenticationResultForUserAsync(ApplicationUser user)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var tokenDescriptor = new SecurityTokenDescriptor()
-            {
-                Subject = new ClaimsIdentity(new List<Claim>
-                {
-                    new Claim("id", user.Id.ToString()),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                }),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Secret)), SecurityAlgorithms.HmacSha256Signature),
-                Expires = DateTime.UtcNow.Add(_jwtOptions.TokenLifetime),
-            };
+            var tokenId = Guid.NewGuid().ToString();
 
-            var token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
+            var jwtToken = JWTBearer.CreateToken(
+                signingKey: _jwtOptions.Secret,
+                expireAt: DateTime.UtcNow.Add(_jwtOptions.TokenLifetime), 
+                permissions: null,
+                roles: null,
+                claims: new (string claimType, string claimValue)[] 
+                { 
+                    ("id", user.Id.ToString()),
+                    (JwtRegisteredClaimNames.Jti, tokenId),
+                    (JwtRegisteredClaimNames.Sub, user.Email),
+                    (JwtRegisteredClaimNames.Email, user.Email),
+                    (JwtRegisteredClaimNames.GivenName, user.GivenName),
+                    (JwtRegisteredClaimNames.FamilyName, user.Surname),
+                });
 
             RefreshToken refreshToken = new()
             {
-                JwtId = token.Id,
+                JwtId = tokenId,
                 CreationDate = DateTime.UtcNow,
                 UserId = user.Id,
                 ExpiryDate = DateTime.UtcNow.AddMonths(6),
@@ -228,7 +227,7 @@ namespace InternLog.Api.Services.Concretes
             return new AuthenticationResult()
             {
                 Success = true,
-                Token = tokenHandler.WriteToken(token),
+                Token = jwtToken,
                 RefreshToken = refreshToken.Id.ToString()
             };
         }

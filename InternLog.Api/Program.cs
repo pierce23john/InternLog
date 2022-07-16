@@ -1,5 +1,11 @@
+global using FastEndpoints;
+global using FastEndpoints.Swagger;
+global using FluentValidation;
+using DateOnlyTimeOnly.AspNet.Converters;
 using InternLog.Api.Extensions;
 using InternLog.Api.Options;
+using System.Text.Json;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,19 +15,11 @@ var app = builder.Build();
 
 
 var swaggerOptions = new SwaggerOptions();
-ConfigurationBinder.Bind(builder.Configuration, nameof(SwaggerOptions), swaggerOptions);
+builder.Configuration.Bind(nameof(SwaggerOptions), swaggerOptions);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger(option => 
-    {
-        option.RouteTemplate = swaggerOptions.JsonRoute;
-    });
-    app.UseSwaggerUI(option =>
-    {
-        option.SwaggerEndpoint(swaggerOptions.UiEndpoint, swaggerOptions.Description);
-    });
     app.UseMigrationsEndPoint();
 }
 else
@@ -30,12 +28,30 @@ else
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
-
+app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 app.UseAuthentication();
-
 app.UseAuthorization();
 
-app.MapControllers();
+
+app.UseFastEndpoints(config =>
+{
+    config.SerializerOptions = options =>
+    {
+        options.Converters.Add(new DateOnlyJsonConverter());
+        options.Converters.Add(new TimeOnlyJsonConverter());
+    };
+    config.GlobalEndpointOptions = (endpoint, builder) =>
+    {
+        builder.RequireCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()) // add this produce error
+            .ProducesProblem(StatusCodes.Status403Forbidden);
+    };   
+ 
+});
+
+
+
+app.UseOpenApi();
+app.UseSwaggerUi3(s => s.ConfigureDefaults());
+
 
 app.Run();

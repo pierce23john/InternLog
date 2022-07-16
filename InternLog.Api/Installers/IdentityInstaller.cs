@@ -4,10 +4,9 @@ using InternLog.Api.Services.Concretes;
 using InternLog.Api.Services.Contracts;
 using InternLog.Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using FastEndpoints.Security;
 
 namespace InternLog.Api.Installers
 {
@@ -33,30 +32,37 @@ namespace InternLog.Api.Installers
 
             services.AddSingleton(tokenValidationParameters);
 
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(jwtBearerOptions =>
-            {
-                jwtBearerOptions.SaveToken = true;
-                jwtBearerOptions.TokenValidationParameters = tokenValidationParameters;
-            });
-
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("DeleteTimesheetForUser", policyBuilder =>
-                {
-                    policyBuilder.RequireClaim("timesheets.deleteforuser", "true");
-                });
-            });
+            services.AddAuthenticationJWTBearer(jwtOptions.Secret);
 
             services
                 .AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<SqlDataContext>();
 
+            return Task.CompletedTask;
+        }
+
+        private Task OnTokenValidated(TokenValidatedContext arg)
+        {
+            return Task.CompletedTask;
+        }
+
+        private Task OnForbidden(ForbiddenContext arg)
+        {
+            return Task.CompletedTask;
+        }
+
+        private Task OnChallenge(JwtBearerChallengeContext arg)
+        {
+            return Task.CompletedTask;
+        }
+
+        private Task OnAuthenticationFailed(AuthenticationFailedContext arg)
+        {
+            return Task.CompletedTask;
+        }
+
+        private Task OnMessageReceived(MessageReceivedContext messageReceivedContext)
+        {
             return Task.CompletedTask;
         }
     }
