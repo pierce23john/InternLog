@@ -1,0 +1,27 @@
+<ul class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <div ngbNavItem class="ms-auto navbar-nav" *ngIf="!authService.isLoggedIn">
+      <a
+        class="me-2 nav-link"
+        [routerLink]="['/identity/register']"
+        routerLinkActive="active"
+        >Register</a
+      ><a
+        class="nav-link"
+        [routerLink]="['/identity/login']"
+        routerLinkActive="active"
+        >Login</a
+      >
+    </div>
+
+    <div ngbNavItem class="ms-auto navbar-nav" *ngIf="authService.isLoggedIn">
+      <a
+        class="me-2 nav-link"
+        [routerLink]="['/identity/profile']"
+        routerLinkActive="active"
+        >Hello User</a
+      >
+      <a class="me-2 nav-link" (click)="logout()">Logout</a>
+    </div>
+  </div>
+</ul>

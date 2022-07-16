@@ -1,0 +1,52 @@
+<div class="row">
+  <h1>Log History</h1>
+</div>
+
+<hr />
+
+<div class="row">
+  <div class="col-lg-3 col-12">
+    <div class="input-group">
+      <label class="col-form-label form-text" for="dateFrom">Date From</label>
+      <input
+        class="form-control ms-3"
+        type="date"
+        id="dateFrom"
+        name="dateFrom"
+      />
+    </div>
+  </div>
+
+  <div class="col-lg-3 col-12">
+    <div class="input-group">
+      <label class="col-form-label form-text" for="dateTo">Date To</label>
+      <input class="form-control ms-3" type="date" id="dateTo" name="dateTo" />
+    </div>
+  </div>
+
+  <div class="col-lg-3 col-12 text-center text-lg-start">
+    <button class="btn btn-primary ms-3">Search</button>
+  </div>
+
+  <div class="col-lg-3 col-12 text-center text-lg-end">
+    <button class="btn btn-lg btn-primary" (click)="openModal()">+ Log Attendance</button>
+  </div>
+</div>
+
+<div class="row py-2">
+  <div class="col-12">
+    <table class="table table-primary table-striped table-bordered">
+      <thead>
+        <tr class="text-center">
+          <th>Day</th>
+          <th>Date</th>
+          <th>Time In</th>
+          <th>Time Out</th>
+          <th>Hours Rendered</th>
+          <th>Hours minus lunch break hour</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
