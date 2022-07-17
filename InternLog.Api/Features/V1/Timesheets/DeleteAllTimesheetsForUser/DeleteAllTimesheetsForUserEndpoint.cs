@@ -30,9 +30,9 @@ namespace InternLog.Api.Features.V1.Timesheets.DeleteAllTimesheetsForUser
 
             if (!deleted)
             {
-                await SendNotFoundAsync();
+                await SendNotFoundAsync(ct);
             }
-            await SendErrorsAsync();
+            await SendErrorsAsync(cancellation: ct);
         }
 
 

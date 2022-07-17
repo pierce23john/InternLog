@@ -1,6 +1,9 @@
 ﻿using DateOnlyTimeOnly.AspNet.Converters;
+using InternLog.Api.Features.V1.Timesheets;
 using InternLog.Api.Services.Concretes;
 using InternLog.Api.Services.Contracts;
+using InternLog.Domain.Entities;
+using Mapster;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,6 +37,11 @@ namespace InternLog.Api.Installers
             shortSchemaNames: true);
             
             services.AddCors();
+            
+            TypeAdapterConfig<Timesheet, GetTimesheetResponse>
+                .NewConfig()
+                .Map(dest => dest.TimeIn, src => src.Date.ToDateTime(src.TimeIn))
+                .Map(dest => dest.TimeOut, src => src.Date.ToDateTime(src.TimeOut));
 
             return Task.CompletedTask;
         }

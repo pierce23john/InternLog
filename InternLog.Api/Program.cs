@@ -44,8 +44,7 @@ app.UseFastEndpoints(config =>
     {
         builder.RequireCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()) // add this produce error
             .ProducesProblem(StatusCodes.Status403Forbidden);
-    };   
- 
+    };
 });
 
 

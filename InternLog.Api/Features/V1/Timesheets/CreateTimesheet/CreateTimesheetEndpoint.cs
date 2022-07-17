@@ -1,4 +1,6 @@
-﻿using InternLog.Api.Features.V1.Timesheets.GetTimesheet;
+﻿using FluentValidation.Results;
+using InternLog.Api.Extensions;
+using InternLog.Api.Features.V1.Timesheets.GetTimesheet;
 using InternLog.Api.Services.Contracts;
 using InternLog.Domain.Entities;
 using Mapster;
@@ -21,10 +23,11 @@ namespace InternLog.Api.Features.V1.Timesheets.CreateTimesheet
 
         public override async Task HandleAsync(CreateTimesheetRequest request, CancellationToken ct)
         {
+            request.UserId = HttpContext.GetUserId();
             var timesheet = request.Adapt<Timesheet>();
             await _timesheetService.CreateTimesheetAsync(timesheet);
 
-            await SendCreatedAtAsync<GetTimesheetEndpoint>(new { id = timesheet.Id }, MapFromEntity(timesheet));
+            await SendCreatedAtAsync<GetTimesheetEndpoint>(new { id = timesheet.Id }, MapFromEntity(timesheet), cancellation: ct);
         }
 
         public override CreateTimesheetResponse MapFromEntity(Timesheet e)
