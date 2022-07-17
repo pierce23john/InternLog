@@ -19,5 +19,6 @@ export default class ApiV1Routes {
   static Timesheets = class {
     static GetAll = ApiV1Routes.Base + "/timesheets";
     static GetById = ApiV1Routes.Base + "/timesheets/{id}";
+    static Create = ApiV1Routes.Base + "/timesheets";
   };
 }

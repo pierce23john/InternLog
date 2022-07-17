@@ -6,22 +6,23 @@
 
 <div class="row">
   <div class="col-lg-3 col-12">
-    <div class="input-group">
-      <label class="col-form-label form-text" for="dateFrom">Date From</label>
-      <input
-        class="form-control ms-3"
-        type="date"
-        id="dateFrom"
-        name="dateFrom"
-      />
-    </div>
+    <mat-form-field appearance="fill">
+      <mat-label>Date From</mat-label>
+      <input matInput [matDatepicker]="dateFromPicker" />
+      <mat-hint>DD/MM/YYYY</mat-hint>
+      <mat-datepicker-toggle matSuffix [for]="dateFromPicker"></mat-datepicker-toggle>
+      <mat-datepicker #dateFromPicker></mat-datepicker>
+    </mat-form-field>
   </div>
 
   <div class="col-lg-3 col-12">
-    <div class="input-group">
-      <label class="col-form-label form-text" for="dateTo">Date To</label>
-      <input class="form-control ms-3" type="date" id="dateTo" name="dateTo" />
-    </div>
+    <mat-form-field appearance="fill">
+      <mat-label>Date To</mat-label>
+      <input matInput [matDatepicker]="dateToPicker" />
+      <mat-hint>DD/MM/YYYY</mat-hint>
+      <mat-datepicker-toggle matSuffix [for]="dateToPicker"></mat-datepicker-toggle>
+      <mat-datepicker #dateToPicker></mat-datepicker>
+    </mat-form-field>
   </div>
 
   <div class="col-lg-3 col-12 text-center text-lg-start">
@@ -29,7 +30,9 @@
   </div>
 
   <div class="col-lg-3 col-12 text-center text-lg-end">
-    <button class="btn btn-lg btn-primary" (click)="openModal()">+ Log Attendance</button>
+    <button class="btn btn-lg btn-primary" (click)="openModal()">
+      + Log Attendance
+    </button>
   </div>
 </div>
 
@@ -46,7 +49,16 @@
           <th>Hours minus lunch break hour</th>
         </tr>
       </thead>
-      <tbody></tbody>
+      <tbody *ngFor="let timesheet of timesheets">
+        <tr>
+          <td>{{ timesheet.date | date: "EEEE" }}</td>
+          <td>{{ timesheet.date | date: "shortDate" }}</td>
+          <td>{{ timesheet.timeIn | date: "shortTime" }}</td>
+          <td>{{ timesheet.timeOut | date: "shortTime" }}</td>
+          <td>{{ timesheet.hoursRendered }}</td>
+          <td>{{ timesheet.hoursRendered - 1 }}</td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </div>

@@ -1,8 +1,13 @@
-<main class="text-center">
-  <form (ngSubmit)="login()" #form="ngForm">
-    <div class="row">
-      <div class="mt-5">
+<main>
+  <form
+    (ngSubmit)="login()"
+    #form="ngForm"
+    class="d-flex flex-column justify-content-between"
+  >
+    <div class="row d-flex justify-content-center">
+      <div class="col-6 mt-5 text-center">
         <img
+          class="text-center"
           style="border: 0; width: 250px; height: 250px"
           src="assets/images/internlog-logo.jpg"
           thumbnail
@@ -12,44 +17,53 @@
       </div>
     </div>
 
-    <div class="row justify-content-center">
-      <div class="col-md-offset-3 col-md-3">
-        <label for="username" class="mx-auto"> Username </label>
-        <input
-          required
-          [(ngModel)]="loginRequest.username"
-          name="username"
-          class="form-control rounded-3 mx-auto"
-          type="text"
-          id="username"
-          #username="ngModel"
-        />
+    <div class="row d-flex justify-content-center my-1">
+      <div class="col-12 col-md-4">
+        <mdb-form-control>
+          <input
+            mdbInput
+            required
+            [(ngModel)]="loginRequest.username"
+            name="username"
+            class="form-control"
+            type="text"
+            id="username"
+            #username="ngModel"
+          />
+          <label mdbLabel for="username" class="form-label"> Username </label>
+        </mdb-form-control>
       </div>
     </div>
 
-    <div class="row justify-content-center">
-      <div class="col-md-offset-3 col-md-3 col-sm-6">
-        <label for="password">Password</label>
-        <input
-          [(ngModel)]="loginRequest.password"
-          name="password"
-          class="form-control rounded-3 mx-auto"
-          type="password"
-          id="password"
-          #password="ngModel"
-        />
+    <div class="row d-flex justify-content-center my-1">
+      <div class="col-12 col-md-4">
+        <mdb-form-control>
+          <input
+            mdbInput
+            [(ngModel)]="loginRequest.password"
+            name="password"
+            class="form-control rounded-3 mx-auto"
+            type="password"
+            id="password"
+            #password="ngModel"
+          />
+          <label mdbLabel for="password" class="form-label">Password</label>
+        </mdb-form-control>
       </div>
     </div>
 
-    <div class="text-danger" *ngIf="username.invalid && (username.dirty || username.touched)">
+    <div
+      class="text-danger"
+      *ngIf="username.invalid && (username.dirty || username.touched)"
+    >
       Please enter a valid username.
     </div>
 
-    <div class="row justify-content-center">
-      <div class="col-md-offset-2 col-md-4 w-50 col-sm-6">
+    <div class="row d-flex justify-content-center my-3">
+      <div class="col-12 col-md-4">
         <button
           [disabled]="!loginRequest.username && !loginRequest.password"
-          class="btn btn-primary btn-sm"
+          class="btn btn-block btn-primary btn-sm"
           type="submit"
         >
           Login

@@ -15,10 +15,10 @@ import {
 import ApiV1Routes from "./constants/apiV1Routes";
 import { RouterModule } from "@angular/router";
 
-export function jwtOptionsFactory(authService: AuthService): JwtConfig {
+export function jwtOptionsFactory(): JwtConfig {
   return {
     tokenGetter: () => {
-      return authService.authToken;
+      return localStorage.getItem('token');
     },
     allowedDomains: ["localhost:7238"],
     disallowedRoutes: [...ApiV1Routes.Identity.AllRoutes]
@@ -31,8 +31,7 @@ export function jwtOptionsFactory(authService: AuthService): JwtConfig {
     JwtModule.forRoot({
       jwtOptionsProvider: {
         provide: JWT_OPTIONS,
-        useFactory: jwtOptionsFactory,
-        deps: [AuthService],
+        useFactory: jwtOptionsFactory
       },
     }),
   ],

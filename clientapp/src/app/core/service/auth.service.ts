@@ -1,24 +1,18 @@
 import { Injectable } from "@angular/core";
 import { of, Observable, tap } from "rxjs";
 import { HttpClient } from "@angular/common/http";
-import { LoginResponse } from "@app/data/schema/loginResponse";
+import { LoginResponse } from "@app/data/models/loginResponse";
 import { JwtHelperService } from "@auth0/angular-jwt";
-import { LoginRequest } from "@app/data/schema/loginRequest";
 import ApiV1Routes from "../constants/apiV1Routes";
 import { Router } from "@angular/router";
-
-const defaultUser = {
-  username: "ADMIN@ADMIN.com",
-  password: "Admin123!",
-  token: "",
-};
+import { LoginRequest } from "@app/data/models/loginRequest";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthService {
 
-  constructor(private httpClient: HttpClient, private router: Router) {}
+  constructor(private httpClient: HttpClient, private router: Router, private jwtHelper: JwtHelperService) {}
 
   login(loginContext: LoginRequest): void {
     this.httpClient
@@ -55,10 +49,6 @@ export class AuthService {
     if (!this.authToken) {
       return false;
     }
-
-    const helper = new JwtHelperService();
-
-
-    return new Date() < helper.getTokenExpirationDate(this.authToken);
+    return new Date() < this.jwtHelper.getTokenExpirationDate();
   }
 }
