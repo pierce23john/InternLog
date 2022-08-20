@@ -1,6 +1,6 @@
 <ul class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
-    <div ngbNavItem class="ms-auto navbar-nav" *ngIf="!authService.isLoggedIn">
+  <div class="container-fluid d-flex justify-content-end">
+    <div ngbNavItem class="navbar-nav justify-content-end" *ngIf="!authService.isLoggedIn">
       <a
         class="me-2 nav-link"
         [routerLink]="['/identity/register']"
@@ -14,7 +14,7 @@
       >
     </div>
 
-    <div ngbNavItem class="ms-auto navbar-nav" *ngIf="authService.isLoggedIn">
+    <div ngbNavItem class="navbar-nav justify-content-end" *ngIf="authService.isLoggedIn">
       <a
         class="me-2 nav-link"
         [routerLink]="['/identity/profile']"

@@ -5,7 +5,6 @@ import { Observable } from "rxjs";
 import { CreateTimesheetRequest } from "../models/createTimesheetRequest";
 import { GetTimesheetResponse } from "../models/getTimesheetResponse";
 
-import { Timesheet } from "../schema/timesheet";
 
 @Injectable({
   providedIn: "root",
@@ -22,6 +21,12 @@ export class TimesheetService {
   getSingle(id: number): Observable<GetTimesheetResponse> {
     return this.httpClient.get<GetTimesheetResponse>(
       `${ApiV1Routes.Timesheets.GetById.replace("{id}", id.toString())}`
+    );
+  }
+
+  getByUserId(userId: string): Observable<Array<GetTimesheetResponse>>{ 
+    return this.httpClient.get<Array<GetTimesheetResponse>>(
+      `${ApiV1Routes.Timesheets.GetAllByUserId.replace("{userId}", userId)}`
     );
   }
 

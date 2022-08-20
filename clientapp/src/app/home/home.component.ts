@@ -3,13 +3,19 @@ import { GetTimesheetResponse } from "@app/data/models/getTimesheetResponse";
 import { TimesheetService } from "@app/data/service/timesheet.service";
 import { MdbModalRef, MdbModalService } from "mdb-angular-ui-kit/modal";
 import { NewTimesheetModalComponent } from "./new-timesheet-modal.component";
-import { DatePipe } from "@angular/common";
+import { FormGroup, FormControl } from "@angular/forms";
+
 @Component({
   selector: "home",
   templateUrl: "home.component.html",
 })
 export class HomeComponent implements OnInit {
   modalRef: MdbModalRef<NewTimesheetModalComponent> | null = null;
+
+  range = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+  });
 
   public timesheets: GetTimesheetResponse[] = [];
 
