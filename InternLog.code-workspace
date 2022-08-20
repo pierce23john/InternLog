@@ -1,0 +1,22 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {},
+  "launch": {
+    "version": "0.2.0",
+    "configurations": []
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "echo",
+        "type": "shell",
+        "command": "echo Hello"
+      }
+    ]
+  }
+}
