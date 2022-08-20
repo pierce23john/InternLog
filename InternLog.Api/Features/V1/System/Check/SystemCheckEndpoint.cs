@@ -14,7 +14,7 @@
             await SendOkAsync(new
             {
                 Message = "Hello from API"
-            });
+            }, ct);
         }
     }
 }

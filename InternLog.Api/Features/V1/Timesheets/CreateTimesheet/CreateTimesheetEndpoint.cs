@@ -25,7 +25,7 @@ namespace InternLog.Api.Features.V1.Timesheets.CreateTimesheet
         {
             request.UserId = HttpContext.GetUserId();
             var timesheet = request.Adapt<Timesheet>();
-            await _timesheetService.CreateTimesheetAsync(timesheet);
+            await _timesheetService.CreateAsync(timesheet);
 
             await SendCreatedAtAsync<GetTimesheetEndpoint>(new { id = timesheet.Id }, MapFromEntity(timesheet), cancellation: ct);
         }

@@ -23,7 +23,7 @@ namespace InternLog.Api.Features.V1.Timesheets.FullUpdateTimesheet
         {
             var timesheet = MapToEntity(request);
 
-            var updated = await _timesheetService.UpdateTimesheetAsync(timesheet);
+            var updated = await _timesheetService.UpdateAsync(timesheet);
 
             if (!updated)
             {

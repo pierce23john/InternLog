@@ -10,17 +10,12 @@
         {
             public const string GetAll = Base + "/timesheets";
             public const string GetById = Base + "/timesheets/{id}";
+            public const string GetAllByUserId = Base + "/identity/{userId}/timesheets";
             public const string Create = Base + "/timesheets";
             public const string FullUpdate = Base + "/timesheets/{id}";
             public const string Delete = Base + "/timesheets/{id}";
             public const string DeleteAllForUser = Base + "/timesheets/{userId}";
         }
-
-        public static class WeatherForecasts
-        {
-            public const string GetAll = Base + "/weatherforecasts";
-        }
-
         public static class Identity
         {
             public const string Login = Base + "/identity/login";

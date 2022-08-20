@@ -26,7 +26,7 @@ namespace InternLog.Api.Features.V1.Timesheets.DeleteAllTimesheetsForUser
         {
             var userId = Route<Guid>("userId");
 
-            var deleted = await _timesheetService.DeleteAllTimesheetsForUserAsync(userId);
+            var deleted = await _timesheetService.DeleteAllForUserAsync(userId);
 
             if (!deleted)
             {

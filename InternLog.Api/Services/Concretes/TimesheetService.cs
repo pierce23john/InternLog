@@ -8,21 +8,22 @@ namespace InternLog.Api.Services.Concretes
     public class TimesheetService : ITimesheetService, IUserOwnedEntityService<ApplicationUser, Timesheet>
     {
         private readonly SqlDataContext _dataContext;
+
         public TimesheetService(SqlDataContext dataContext)
         {
             _dataContext = dataContext;
         }
 
-        public async Task<Timesheet> CreateTimesheetAsync(Timesheet timesheet)
+        public async Task<Timesheet> CreateAsync(Timesheet timesheet)
         {
             _dataContext.Set<Timesheet>().Add(timesheet);
             await _dataContext.SaveChangesAsync();
             return timesheet;
         }
 
-        public async Task<bool> DeleteTimesheetAsync(Guid id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
-            var timesheet = await GetTimesheetByIdAsync(id);
+            var timesheet = await GetByIdAsync(id);
 
             if (timesheet is null)
             {
@@ -34,10 +35,10 @@ namespace InternLog.Api.Services.Concretes
             return deleted > 0;
         }
 
-        public async Task<bool> DeleteAllTimesheetsForUserAsync(Guid userId)
+        public async Task<bool> DeleteAllForUserAsync(Guid userId)
         {
             var timesheetsForUser = await _dataContext.Set<Timesheet>()
-                                        .Where(timesheet => timesheet.UserId == userId).ToListAsync();
+                .Where(timesheet => timesheet.UserId == userId).ToListAsync();
 
             _dataContext.Set<Timesheet>().RemoveRange(timesheetsForUser);
 
@@ -45,17 +46,25 @@ namespace InternLog.Api.Services.Concretes
 
             return deletedRows > 0;
         }
-        public async Task<Timesheet> GetTimesheetByIdAsync(Guid id)
+
+        public async Task<Timesheet> GetByIdAsync(Guid id)
         {
             return await _dataContext.Set<Timesheet>().FindAsync(id);
         }
 
-        public async Task<List<Timesheet>> GetTimesheetsAsync()
+        public async Task<List<Timesheet>> GetAllAsync()
         {
             return await _dataContext.Set<Timesheet>().AsNoTracking().ToListAsync();
         }
 
-        public async Task<bool> UpdateTimesheetAsync(Timesheet timesheetToUpdate)
+        public async Task<List<Timesheet>> GetAllByUserIdAsync(Guid userId)
+        {
+            return await _dataContext.Set<Timesheet>().AsNoTracking()
+                .Where(timesheet => timesheet.UserId == userId).ToListAsync();
+        }
+
+
+        public async Task<bool> UpdateAsync(Timesheet timesheetToUpdate)
         {
             _dataContext.Set<Timesheet>().Update(timesheetToUpdate);
             var updated = await _dataContext.SaveChangesAsync();
