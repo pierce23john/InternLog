@@ -4,11 +4,12 @@ namespace InternLog.Api.Services.Contracts
 {
     public interface ITimesheetService
     {
-        Task<List<Timesheet>> GetTimesheetsAsync();
-        Task<Timesheet> GetTimesheetByIdAsync(Guid id);
-        Task<Timesheet> CreateTimesheetAsync(Timesheet timesheet);
-        Task<bool> UpdateTimesheetAsync(Timesheet timesheetToUpdate);
-        Task<bool> DeleteTimesheetAsync(Guid id);
-        Task<bool> DeleteAllTimesheetsForUserAsync(Guid userId);
+        Task<List<Timesheet>> GetAllAsync();
+        Task<Timesheet> GetByIdAsync(Guid id);
+        Task<List<Timesheet>> GetAllByUserIdAsync(Guid userId);
+        Task<Timesheet> CreateAsync(Timesheet timesheet);
+        Task<bool> UpdateAsync(Timesheet timesheetToUpdate);
+        Task<bool> DeleteAsync(Guid id);
+        Task<bool> DeleteAllForUserAsync(Guid userId);
     }
 }
