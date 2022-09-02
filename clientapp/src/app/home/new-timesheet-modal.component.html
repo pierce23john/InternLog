@@ -1,23 +1,33 @@
-<div class="modal-header">
-  <h5 class="modal-title" id="new-timesheet-modal">Log Attendance</h5>
-  <button
-    type="button"
-    class="btn-close"
-    aria-label="Close"
-    (click)="modalRef.close()"
-  ></button>
-</div>
-<div class="modal-body">
-  <form>
+<form [formGroup]="timesheetForm" (ngSubmit)="saveTimesheet()">
+  <div class="modal-header">
+    <h5 class="modal-title" id="new-timesheet-modal">Log Attendance</h5>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modalRef.close()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div
+      class="alert alert-danger"
+      *ngIf="timesheetForm.errors?.['invalidTime'] && (timesheetForm.touched || timesheetForm.dirty)"
+    >
+      <span>
+        {{timesheetForm.errors?.['invalidTime']}}
+      </span>
+    </div>
+
     <div class="row d-flex justify-content-center">
       <mat-form-field appearance="fill">
         <mat-label>Choose a date</mat-label>
         <input
-          name="timesheetDate"
-          id="timesheetDate"
+          name="date"
+          id="date"
           matInput
           [matDatepicker]="datePicker"
-          [(ngModel)]="timesheet.date"
+          formControlName="date"
+          name="date"
         />
         <mat-datepicker-toggle
           matSuffix
@@ -34,7 +44,7 @@
           type="time"
           id="timeIn"
           name="timeIn"
-          [(ngModel)]="timesheet.timeIn"
+          formControlName="timeIn"
         />
       </mat-form-field>
     </div>
@@ -47,34 +57,35 @@
           type="time"
           id="timeOut"
           name="timeOut"
-          [(ngModel)]="timesheet.timeOut"
+          formControlName="timeOut"
         />
       </mat-form-field>
     </div>
 
     <div class="row d-flex justify-content-center">
-      <mat-radio-group aria-label="Absent or Holiday">
-        <mat-radio-button
-          name="isAbsent"
-          [value]="timesheet.isAbsent"
-          [checked]="timesheet.isAbsent"
+      <mat-radio-group
+        class="d-flex flex-column"
+        aria-label="Absent or Holiday"
+        formControlName="holidayOrAbsent"
+      >
+        <mat-radio-button name="isAbsent" value="absent"
           >Absent</mat-radio-button
         >
-        <mat-radio-button
-          name="isHoliday"
-          [value]="timesheet.isHoliday"
-          [checked]="timesheet.isHoliday"
+        <mat-radio-button name="isHoliday" value="holiday"
           >Holiday</mat-radio-button
         >
       </mat-radio-group>
     </div>
-  </form>
-</div>
-<div class="modal-footer text-center">
-  <button type="button" class="btn btn-secondary" (click)="modalRef.close()">
-    Cancel
-  </button>
-  <button type="button" class="btn btn-primary" (click)="saveTimesheet()">
-    Save
-  </button>
-</div>
+  </div>
+  <div class="modal-footer text-center">
+    <button type="button" class="btn btn-secondary" (click)="modalRef.close()">
+      Cancel
+    </button>
+    <input
+      type="submit"
+      [disabled]="timesheetForm.errors?.['invalidTime'] && (timesheetForm.touched || timesheetForm.dirty)"
+      class="btn btn-primary"
+      value="Save"
+    />
+  </div>
+</form>

@@ -1,18 +1,21 @@
 import { Injectable } from "@angular/core";
 import { of, Observable, tap } from "rxjs";
 import { HttpClient } from "@angular/common/http";
-import { LoginResponse } from "@app/data/models/loginResponse";
+import { LoginResponse } from "@app/data/models/login";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import ApiV1Routes from "../constants/apiV1Routes";
 import { Router } from "@angular/router";
-import { LoginRequest } from "@app/data/models/loginRequest";
+import { LoginRequest } from "@app/data/models/login";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthService {
-
-  constructor(private httpClient: HttpClient, private router: Router, private jwtHelper: JwtHelperService) {}
+  constructor(
+    private httpClient: HttpClient,
+    private router: Router,
+    private jwtHelper: JwtHelperService
+  ) {}
 
   login(loginContext: LoginRequest): void {
     this.httpClient
@@ -32,17 +35,17 @@ export class AuthService {
   }
 
   logout(): Observable<boolean> {
-    this.authToken = '';
+    this.authToken = "";
     this.router.navigate(["/identity/login"]);
     return of(false);
   }
 
-  public set authToken(token: string){
-      localStorage.setItem('token', token)
+  public set authToken(token: string) {
+    localStorage.setItem("token", token);
   }
 
   public get authToken(): string {
-    return localStorage.getItem('token');
+    return localStorage.getItem("token");
   }
 
   public get isLoggedIn(): boolean {

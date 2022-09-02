@@ -2,7 +2,6 @@ import { ComponentFactoryResolver, NgModule } from "@angular/core";
 import { UserService } from "./service/user.service";
 import { TimesheetService } from "./service/timesheet.service";
 import { CoreModule } from "@app/core/core.module";
-import { JwtInterceptor, JwtModule, JWT_OPTIONS } from "@auth0/angular-jwt";
 import { AuthService } from "@app/core/service/auth.service";
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 

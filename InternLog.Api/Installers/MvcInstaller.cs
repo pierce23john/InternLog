@@ -1,5 +1,7 @@
 ﻿using DateOnlyTimeOnly.AspNet.Converters;
+using InternLog.Api.Converters;
 using InternLog.Api.Features.V1.Timesheets;
+using InternLog.Api.Features.V1.Timesheets.CreateTimesheet;
 using InternLog.Api.Services.Concretes;
 using InternLog.Api.Services.Contracts;
 using InternLog.Domain.Entities;
@@ -9,41 +11,46 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InternLog.Api.Installers
 {
-    public class MvcInstaller : IServiceInstaller
-    {
-        public Task InstallAsync(IServiceCollection services, IConfiguration configuration)
-        {
+	public class MvcInstaller : IServiceInstaller
+	{
+		public Task InstallAsync(IServiceCollection services, IConfiguration configuration)
+		{
+			services.Configure<JsonOptions>(config => config.UseDateOnlyTimeOnlyStringConverters());
 
-            services.Configure<JsonOptions>(config => config.UseDateOnlyTimeOnlyStringConverters());
+			services.AddFastEndpoints();
 
-            services.AddFastEndpoints();
+			services.AddHttpContextAccessor();
+			services.AddScoped<ILinkGeneratorService, LinkGeneratorService>();
 
-            services.AddHttpContextAccessor();
-            services.AddScoped<ILinkGeneratorService, LinkGeneratorService>();
+			services.AddSwaggerDoc(swaggerSettings =>
+			{
+				swaggerSettings.DocumentName = "Internlog API";
+				swaggerSettings.Title = "InternLog API";
+				swaggerSettings.Version = "v1";
+			}, serializerSettings =>
+			{
+				serializerSettings.Converters.Add(new CustomDateOnlyJsonConverter());
+				serializerSettings.Converters.Add(new TimeOnlyJsonConverter());
+			}, addJWTBearerAuth: true,
+			tagIndex: 3,
+			maxEndpointVersion: 1,
+			shortSchemaNames: true);
 
+			services.AddCors();
 
-            services.AddSwaggerDoc(swaggerSettings =>
-            {
-                swaggerSettings.DocumentName = "Internlog API";
-                swaggerSettings.Title = "InternLog API";
-                swaggerSettings.Version = "v1";
-            }, serializerSettings =>
-            {
-                serializerSettings.Converters.Add(new DateOnlyJsonConverter());
-                serializerSettings.Converters.Add(new TimeOnlyJsonConverter());
-            }, addJWTBearerAuth: true,
-            tagIndex: 3, 
-            maxEndpointVersion: 1,
-            shortSchemaNames: true);
-            
-            services.AddCors();
-            
-            TypeAdapterConfig<Timesheet, GetTimesheetResponse>
-                .NewConfig()
-                .Map(dest => dest.TimeIn, src => src.Date.ToDateTime(src.TimeIn))
-                .Map(dest => dest.TimeOut, src => src.Date.ToDateTime(src.TimeOut));
+			TypeAdapterConfig<Timesheet, GetTimesheetResponse>
+				.NewConfig()
+				.Map(dest => dest.Date, src => src.Date.ToDateTime(TimeOnly.FromTimeSpan(TimeSpan.Zero), DateTimeKind.Local))
+				.Map(dest => dest.TimeIn, src => src.Date.ToDateTime(src.TimeIn, DateTimeKind.Local))
+				.Map(dest => dest.TimeOut, src => src.Date.ToDateTime(src.TimeOut, DateTimeKind.Local));
 
-            return Task.CompletedTask;
-        }
-    }
+			TypeAdapterConfig<Timesheet, CreateTimesheetResponse>
+				.NewConfig()
+				.Map(dest => dest.Date, src => src.Date.ToDateTime(TimeOnly.FromTimeSpan(TimeSpan.Zero), DateTimeKind.Local))
+				.Map(dest => dest.TimeIn, src => src.Date.ToDateTime(src.TimeIn, DateTimeKind.Local))
+				.Map(dest => dest.TimeOut, src => src.Date.ToDateTime(src.TimeOut, DateTimeKind.Local));
+
+			return Task.CompletedTask;
+		}
+	}
 }

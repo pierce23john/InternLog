@@ -1,27 +1,35 @@
-<ul class="navbar navbar-expand-lg navbar-light bg-light">
+<ul class="navbar navbar-expand-lg navbar-light bg-primary">
   <div class="container-fluid d-flex justify-content-end">
-    <div ngbNavItem class="navbar-nav justify-content-end" *ngIf="!authService.isLoggedIn">
+    <div
+      ngbNavItem
+      class="navbar-nav justify-content-end"
+      *ngIf="!authService.isLoggedIn"
+    >
       <a
-        class="me-2 nav-link"
+        class="me-2 nav-link text-light"
         [routerLink]="['/identity/register']"
         routerLinkActive="active"
         >Register</a
       ><a
-        class="nav-link"
+        class="nav-link text-text-light"
         [routerLink]="['/identity/login']"
         routerLinkActive="active"
         >Login</a
       >
     </div>
 
-    <div ngbNavItem class="navbar-nav justify-content-end" *ngIf="authService.isLoggedIn">
+    <div
+      ngbNavItem
+      class="navbar-nav justify-content-end"
+      *ngIf="authService.isLoggedIn"
+    >
       <a
-        class="me-2 nav-link"
+        class="me-2 nav-link text-light"
         [routerLink]="['/identity/profile']"
         routerLinkActive="active"
         >Hello User</a
       >
-      <a class="me-2 nav-link" (click)="logout()">Logout</a>
+      <a class="me-2 nav-link text-light" (click)="logout()">Logout</a>
     </div>
   </div>
 </ul>

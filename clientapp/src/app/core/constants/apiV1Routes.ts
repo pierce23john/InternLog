@@ -10,6 +10,7 @@ export default class ApiV1Routes {
   static Identity = class {
     static Base = ApiV1Routes.Base + "/identity";
     static Login = ApiV1Routes.Base + "/identity/login";
+    static Logout = ApiV1Routes.Base + "/identity/logout";
     static Register = ApiV1Routes.Base + "/identity/register";
     static ConfirmEmail = ApiV1Routes.Base + "/identity/confirm";
     static Refresh = ApiV1Routes.Base + "/identity/refresh";

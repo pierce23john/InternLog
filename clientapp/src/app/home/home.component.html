@@ -21,18 +21,6 @@
     >
   </mat-form-field>
 
-  <pre>{{ range.value | json }}</pre>
-
-  <button
-    class="btn btn-primary m-3"
-    [disabled]="
-      range.controls.start.hasError('matStartDateInvalid') ||
-      range.controls.start.hasError('matEndDateInvalid')
-    "
-  >
-    Search
-  </button>
-
   <button class="btn btn-lg btn-primary m-3" (click)="openModal()">
     + Log Attendance
   </button>
@@ -41,7 +29,10 @@
 <div class="row py-2">
   <div class="col-12">
     <div class="table-responsive">
-      <table class="table primary table-bordered table-striped">
+      <table
+        class="table primary table-bordered table-striped"
+        *ngIf="timesheetsWithAdd$ | async as timesheets"
+      >
         <thead>
           <tr class="text-center">
             <th>Day</th>

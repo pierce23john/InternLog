@@ -10,10 +10,6 @@ public class RefreshTokenRequest
 
 public class RefreshTokenRequestValidator : Validator<RefreshTokenRequest>
 {
-    public RefreshTokenRequestValidator()
-    {
-
-    }
 }
 
 public class RefreshTokenSuccessResponse
