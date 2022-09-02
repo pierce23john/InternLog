@@ -1,7 +1,8 @@
 ﻿using FastEndpoints.Security;
-using InternLog.Api.Data;
+
 using InternLog.Api.Options;
 using InternLog.Api.Services.Contracts;
+using InternLog.Data;
 using InternLog.Domain.Entities;
 using InternLog.Domain.Models;
 using Microsoft.AspNetCore.Identity;
