@@ -1,58 +1,67 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-
+using IdentityModel;
 using IdentityServer4.Models;
 using System.Collections.Generic;
 
 namespace InternLog.STS
 {
-    public static class Config
-    {
-        public static IEnumerable<IdentityResource> IdentityResources =>
-                   new IdentityResource[]
-                   {
-                new IdentityResources.OpenId(),
-                new IdentityResources.Profile(),
-                   };
+	public static class Config
+	{
+		public static IEnumerable<IdentityResource> IdentityResources =>
+				   new IdentityResource[]
+				   {
+						new IdentityResources.OpenId(),
+						new IdentityResources.Profile(),
+				   };
 
-        public static IEnumerable<ApiScope> ApiScopes =>
-            new ApiScope[]
-            {
-                new ApiScope("scope1"),
-                new ApiScope("scope2"),
-            };
+		public static IEnumerable<ApiResource> ApiResources =>
+				new List<ApiResource>
+				{
+								new ApiResource("internlog-api", "Internlog API")
+								{
+									Scopes = { "internlog_api" },
+								}
+				};
 
-        public static IEnumerable<Client> Clients =>
-            new Client[]
-            {
-                // m2m client credentials flow client
-                new Client
-                {
-                    ClientId = "m2m.client",
-                    ClientName = "Client Credentials Client",
+		public static IEnumerable<ApiScope> ApiScopes =>
+			new ApiScope[]
+			{
+				new ApiScope("scope1"),
+				new ApiScope("internlog_api")
+			};
 
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
+		public static IEnumerable<Client> Clients =>
+			new Client[]
+			{
+				// m2m client credentials flow client
+				new Client
+				{
+					ClientId = "m2m.client",
+					ClientName = "Client Credentials Client",
 
-                    AllowedScopes = { "scope1" }
-                },
+					AllowedGrantTypes = GrantTypes.ClientCredentials,
+					ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
 
-                // interactive client using code flow + pkce
-                new Client
-                {
-                    ClientId = "interactive",
-                    ClientSecrets = { new Secret("49C1A7E1-0C79-4A89-A3D6-A37998FB86B0".Sha256()) },
+					AllowedScopes = { "scope1" }
+				},
 
-                    AllowedGrantTypes = GrantTypes.Code,
+				// interactive client using code flow + pkce
+				new Client
+				{
+					ClientId = "internlog.clientapp",
+					ClientSecrets = { new Secret("testingsecret".Sha256()) },
+					AllowedGrantTypes = GrantTypes.Code,
+					RequireClientSecret = false,
+					RedirectUris = { "http://localhost:4200/identity/login-callback" },
+					FrontChannelLogoutUri = "http://localhost:4200/identity/logout-callback",
+					PostLogoutRedirectUris = { "http://localhost:4200/identity/logout-callback" },
+					AllowedCorsOrigins = {"http://localhost:4200"},
 
-                    RedirectUris = { "https://localhost:44300/signin-oidc" },
-                    FrontChannelLogoutUri = "https://localhost:44300/signout-oidc",
-                    PostLogoutRedirectUris = { "https://localhost:44300/signout-callback-oidc" },
-
-                    AllowOfflineAccess = true,
-                    AllowedScopes = { "openid", "profile", "scope2" }
-                },
-            };
-    }
+					AllowOfflineAccess = true,
+					AllowedScopes = { "openid", "profile", "offline_access", "internlog_api" }
+				},
+			};
+	}
 }

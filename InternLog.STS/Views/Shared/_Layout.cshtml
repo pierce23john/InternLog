@@ -6,22 +6,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
 
     <title>IdentityServer4</title>
-    
+    @*
     <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
     <link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico" />
-    
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
+
+
+    <!-- Font Awesome -->
+    <link href="~/lib/fontawesome/css/all.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- MDB -->
+    <link href="~/lib/materialize/css/materialize.css" rel="stylesheet" />
+    @*<link href="~/lib/materialize/css/materialize.min.css" rel="stylesheet" />*@
+    @*<link href="~/lib/bootstrap/css/mdb.css" rel="stylesheet" />*@
     <link rel="stylesheet" href="~/css/site.css" />
+
+
+
+
 </head>
 <body>
-    <partial name="_Nav" />
-   
-    <div class="container body-container">
-        @RenderBody()
+    <div>
+        <div>
+            <partial name="_Nav" />
+
+            <div class="container body-container">
+                @RenderBody()
+            </div>
+
+            <partial name="_Footer" />
+        </div>
     </div>
 
-    <script src="~/lib/jquery/dist/jquery.slim.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Font Awesome -->
+    <script src="~/lib/fontawesome/js/all.js"></script>
+    <!-- MDB -->
+    <script src="~/lib/materialize/js/materialize.js"></script>
+    @*<script src="~/lib/materialize/js/materialize.min.js"></script>*@
+    @*<script src="~/lib/bootstrap/js/mdb.js"></script>*@
+
 
     @RenderSection("scripts", required: false)
 </body>

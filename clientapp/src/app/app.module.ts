@@ -4,7 +4,6 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { ContentLayoutComponent } from "./layout/content-layout/content-layout.component";
 import { FooterComponent } from "./layout/footer/footer.component";
-import { NavbarComponent } from "./layout/navbar/navbar.component";
 import { IdentityRoutingModule } from "./modules/identity/identity.routing";
 import { CoreModule } from "./core/core.module";
 import { DataModule } from "./data/data.module";
@@ -13,12 +12,12 @@ import { HomeComponent } from "./home/home.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NewTimesheetModalComponent } from "./home/new-timesheet-modal.component";
 import { IdentityModule } from "./modules/identity/identity.module";
+import { SharedModule } from "./shared/shared.module";
 
 @NgModule({
   declarations: [
     AppComponent,
     ContentLayoutComponent,
-    NavbarComponent,
     FooterComponent,
     HomeComponent,
     NewTimesheetModalComponent,
@@ -30,11 +29,10 @@ import { IdentityModule } from "./modules/identity/identity.module";
     IdentityModule,
     CoreModule,
     DataModule,
-    ReactiveFormsModule,
-    FormsModule,
+    SharedModule,
     BrowserAnimationsModule,
-
   ],
+  exports: [CoreModule, SharedModule],
   providers: [],
   bootstrap: [AppComponent],
 })

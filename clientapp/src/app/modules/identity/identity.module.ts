@@ -1,24 +1,18 @@
 import { NgModule } from "@angular/core";
-
 import { LoginComponent } from "./page/login/login.component";
 import { RegisterComponent } from "./page/register/register.component";
-
 import { IdentityRoutingModule } from "./identity.routing";
-import { FormsModule } from "@angular/forms";
-import { CommonModule } from "@angular/common";
-import { HttpClientModule } from "@angular/common/http";
-import { MdbFormsModule } from "mdb-angular-ui-kit/forms";
 import { MatDatepickerModule } from "@angular/material/datepicker";
+import { LoginCallbackComponent } from "./page/login-callback/login-callback.component";
+import { CoreModule } from "@app/core/core.module";
+import { SharedModule } from "@app/shared/shared.module";
+import { ProfileComponent } from './page/profile/profile.component';
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent],
+  declarations: [LoginComponent, RegisterComponent, LoginCallbackComponent, ProfileComponent],
   imports: [
+    SharedModule,
     IdentityRoutingModule,
-    CommonModule,
-    FormsModule,
-    HttpClientModule,
-    MdbFormsModule,
-    MatDatepickerModule,
   ],
 })
 export class IdentityModule {}

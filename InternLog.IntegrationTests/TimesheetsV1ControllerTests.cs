@@ -42,7 +42,7 @@ namespace InternLog.IntegrationTests
 			// Act
 			var response = await HttpClient.PostAsJsonAsync(ApiV1Routes.Timesheets.Create, new CreateTimesheetRequest()
 			{
-				Date = DateOnly.FromDateTime(DateTime.Now),
+				Date = DateTime.UtcNow,
 				Description = "Test timesheet",
 				IsAbsent = false,
 				IsHoliday = false,

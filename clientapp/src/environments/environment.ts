@@ -6,7 +6,8 @@ export const environment = {
   production: false,
   baseBackendUrl: 'https://localhost:7238',
   testAdminEmail: "ADMIN@ADMIN.COM",
-  testAdminPassword: "Admin123!"
+  testAdminPassword: "Admin123!",
+  configId: 'internlog.clientapp'
 };
 
 /*

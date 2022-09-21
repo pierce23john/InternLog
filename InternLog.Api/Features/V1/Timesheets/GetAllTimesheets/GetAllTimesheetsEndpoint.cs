@@ -1,4 +1,5 @@
 ﻿using FastEndpoints;
+using InternLog.Api.Extensions;
 using InternLog.Api.Services.Contracts;
 using InternLog.Domain.Entities;
 using Mapster;
@@ -22,7 +23,7 @@ namespace InternLog.Api.Features.V1.Timesheets.GetAllTimesheets
 
         public override async Task HandleAsync(EmptyRequest req, CancellationToken ct)
         {
-            var timesheets = await _timesheetService.GetAllAsync();
+            var timesheets = await _timesheetService.GetAllByUserIdAsync(HttpContext.GetUserId());
             await SendOkAsync(timesheets.Select(MapFromEntity), ct);
         }
 

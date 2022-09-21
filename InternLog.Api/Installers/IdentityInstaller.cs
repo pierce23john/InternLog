@@ -7,6 +7,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using FastEndpoints.Security;
 using InternLog.Data;
+using IdentityServer4.AccessTokenValidation;
+using System.Security.Claims;
 
 namespace InternLog.Api.Installers
 {
@@ -18,21 +20,26 @@ namespace InternLog.Api.Installers
 			configuration.Bind(nameof(jwtOptions), jwtOptions);
 			services.AddSingleton(jwtOptions);
 
-			var tokenValidationParameters = new TokenValidationParameters
-			{
-				ValidateIssuerSigningKey = true,
-				IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Secret)),
-				ValidateIssuer = false,
-				ValidateAudience = false,
-				ValidateLifetime = true
-			};
-
 			services.AddScoped<IEmailService, EmailService>();
 			services.AddScoped<IIdentityService, IdentityService>();
 
-			services.AddSingleton(tokenValidationParameters);
+			services.AddAuthentication(config =>
+			{
+				config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			})
+						.AddJwtBearer(options =>
+						{
+							// base-address of your identityserver
+							options.Authority = "https://localhost:5001";
 
-			services.AddAuthenticationJWTBearer(jwtOptions.Secret);
+							// if you are using API resources, you can specify the name here
+							options.Audience = "internlog-api";
+								
+
+							// IdentityServer emits a typ header by default, recommended extra check
+							options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
+						});
 
 			services
 				.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)

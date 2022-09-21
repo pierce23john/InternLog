@@ -5,8 +5,8 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using IdentityModel;
+using InternLog.Data;
 using InternLog.Domain.Entities;
-using InternLog.STS.Data;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,24 +15,24 @@ using Serilog;
 
 namespace InternLog.STS
 {
-	public class SeedData
+	public static class SeedData
 	{
 		public static void EnsureSeedData(string connectionString)
 		{
 			var services = new ServiceCollection();
 			services.AddLogging();
-			services.AddDbContext<ApplicationDbContext>(options =>
+			services.AddDbContext<SqlDataContext>(options =>
 			   options.UseSqlServer(connectionString));
 
 			services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
-				.AddEntityFrameworkStores<ApplicationDbContext>()
+				.AddEntityFrameworkStores<SqlDataContext>()
 				.AddDefaultTokenProviders();
 
 			using (var serviceProvider = services.BuildServiceProvider())
 			{
 				using (var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
 				{
-					var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+					var context = scope.ServiceProvider.GetService<SqlDataContext>();
 					context.Database.Migrate();
 
 					var userMgr = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();

@@ -1,12 +1,13 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { AuthService } from "@app/core/service/auth.service";
 import { LoginRequest } from "@app/data/models/login";
+import { OidcSecurityService } from "angular-auth-oidc-client";
 
 @Component({
   selector: "login",
   templateUrl: "login.component.html",
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   public loginRequest: LoginRequest = {
     username: "ADMIN@ADMIN.com",
     password: "Admin123!",
@@ -14,10 +15,9 @@ export class LoginComponent {
 
   constructor(private authService: AuthService) {}
 
-  login() {
-    this.authService.login({
-      username: this.loginRequest.username,
-      password: this.loginRequest.password,
-    });
+  ngOnInit(): void {
+    this.authService.login();
   }
+
+  login() {}
 }

@@ -1,4 +1,5 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
+import { createDateFromTimeString } from "@app/shared/helpers/timeHelpers";
 
 export function timeValidator(startName, endName): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -14,13 +15,3 @@ export function timeValidator(startName, endName): ValidatorFn {
   };
 }
 
-const createDateFromTimeString = (time) => {
-  const hour = Number(time.split(":")[0]);
-  const minute = Number(time.split(":")[1]);
-
-  const date = new Date();
-  date.setHours(hour);
-  date.setMinutes(minute);
-
-  return date;
-};

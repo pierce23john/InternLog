@@ -13,6 +13,7 @@ namespace InternLog.Data.EntityTypeConfigurations
             builder.HasOne(timesheet => timesheet.User)
                    .WithMany(user => user.Timesheets)
                    .HasForeignKey(timesheet => timesheet.UserId);
-        }
+
+		}
     }
 }

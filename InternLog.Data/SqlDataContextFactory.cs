@@ -25,6 +25,7 @@ namespace InternLog.Data
 			var optionsBuilder = new DbContextOptionsBuilder<SqlDataContext>()
 				.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
 
+
 			return new SqlDataContext(optionsBuilder.Options);
 		}
 	}

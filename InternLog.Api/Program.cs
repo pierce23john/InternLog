@@ -42,6 +42,7 @@ app.UseFastEndpoints(config =>
 	};
 	config.GlobalEndpointOptions = (endpoint, builder) =>
 	{
+
 		builder.RequireCors(x => x.SetIsOriginAllowed((origin) => origin == "http://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials()) // add this produce error
 			.ProducesProblem(StatusCodes.Status403Forbidden);
 	};

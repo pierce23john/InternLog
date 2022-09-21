@@ -1,7 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { GetTimesheetResponse } from "@app/data/models/timesheet";
 import { TimesheetService } from "@app/data/service/timesheet.service";
-import { MdbModalRef, MdbModalService } from "mdb-angular-ui-kit/modal";
 import { NewTimesheetModalComponent } from "./new-timesheet-modal.component";
 import { FormGroup, FormControl } from "@angular/forms";
 import {
@@ -15,20 +14,39 @@ import {
   forkJoin,
   Subject,
   zip,
+  Observable,
 } from "rxjs";
 import { Timesheet } from "@app/data/schema/timesheet";
+import { OidcSecurityService } from "angular-auth-oidc-client";
+import { AuthService } from "@app/core/service/auth.service";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatTableDataSource } from "@angular/material/table";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: "home",
   templateUrl: "home.component.html",
+  styleUrls: ["./home.component.scss"],
 })
-export class HomeComponent {
-  modalRef: MdbModalRef<NewTimesheetModalComponent> | null = null;
+export class HomeComponent implements OnInit, AfterViewInit {
+  dialogRef: MatDialogRef<NewTimesheetModalComponent> | null = null;
+
+  dataSource = new MatTableDataSource<GetTimesheetResponse>();
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   range = new FormGroup({
     start: new FormControl<Date | null>(null),
     end: new FormControl<Date | null>(null),
   });
+
+  openDialog(): void {
+    this.dialogRef = this.dialog.open(NewTimesheetModalComponent, {
+      width: "450px",
+      height: "auto",
+    });
+  }
 
   rangeFilters$ = combineLatest([
     this.range.controls.start.valueChanges.pipe(filter((d) => Boolean(d))),
@@ -39,7 +57,9 @@ export class HomeComponent {
   );
 
   timesheetsWithAdd$ = combineLatest([
-    this.timesheetService.timesheets$,
+    this.activatedRoute.data.pipe(
+      map((data) => <GetTimesheetResponse[]>data["timesheets"])
+    ),
     this.rangeFilters$.pipe(startWith(null)),
   ]).pipe(
     tap(([timesheets, range]) => {
@@ -60,17 +80,38 @@ export class HomeComponent {
     })
   );
 
+  userData$ = this.authService.userData$;
+
+  displayedColumns: string[] = [
+    "date",
+    "day",
+    "timeIn",
+    "timeOut",
+    "hoursRendered",
+    "hoursRenderedMinusLunchBreak",
+  ];
+
   constructor(
     private timesheetService: TimesheetService,
-    private modalService: MdbModalService
+    private authService: AuthService,
+    public dialog: MatDialog,
+    private activatedRoute: ActivatedRoute
   ) {}
 
-  openModal() {
-    this.modalRef = this.modalService.open(NewTimesheetModalComponent);
-    this.modalRef.onClose.subscribe((message: any) => {
-      if (message) {
-        this.timesheetService.onTimesheetAdded(message);
-      }
+  ngAfterViewInit(): void {
+    this.timesheetsWithAdd$.subscribe((data) => {
+      this.dataSource.data = data;
+      this.dataSource.paginator = this.paginator;
     });
+  }
+  ngOnInit(): void {}
+
+  openModal() {
+    // this.modalRef = this.modalService.open(NewTimesheetModalComponent);
+    // this.modalRef.onClose.subscribe((message: any) => {
+    //   if (message) {
+    //     this.timesheetService.onTimesheetAdded(message);
+    //   }
+    // });
   }
 }

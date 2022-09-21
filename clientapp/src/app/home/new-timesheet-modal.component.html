@@ -1,91 +1,86 @@
-<form [formGroup]="timesheetForm" (ngSubmit)="saveTimesheet()">
-  <div class="modal-header">
-    <h5 class="modal-title" id="new-timesheet-modal">Log Attendance</h5>
-    <button
+<form
+  [formGroup]="timesheetForm"
+  class="timesheetForm"
+  (ngSubmit)="saveTimesheet()"
+>
+  <h5 mat-dialog-title>Log Attendance</h5>
+  <!-- <button
       type="button"
       class="btn-close"
       aria-label="Close"
       (click)="modalRef.close()"
-    ></button>
-  </div>
-  <div class="modal-body">
+    ></button> -->
+  <mat-dialog-content fxLayout="column">
     <div
       class="alert alert-danger"
       *ngIf="timesheetForm.errors?.['invalidTime'] && (timesheetForm.touched || timesheetForm.dirty)"
     >
-      <span>
+      <mat-error>
         {{timesheetForm.errors?.['invalidTime']}}
-      </span>
+      </mat-error>
     </div>
 
-    <div class="row d-flex justify-content-center">
-      <mat-form-field appearance="fill">
-        <mat-label>Choose a date</mat-label>
-        <input
-          name="date"
-          id="date"
-          matInput
-          [matDatepicker]="datePicker"
-          formControlName="date"
-          name="date"
-        />
-        <mat-datepicker-toggle
-          matSuffix
-          [for]="datePicker"
-        ></mat-datepicker-toggle>
-        <mat-datepicker #datePicker></mat-datepicker>
-      </mat-form-field>
-    </div>
-    <div class="row d-flex justify-content-center">
-      <mat-form-field appearance="fill">
-        <mat-label>Time In</mat-label>
-        <input
-          matInput
-          type="time"
-          id="timeIn"
-          name="timeIn"
-          formControlName="timeIn"
-        />
-      </mat-form-field>
-    </div>
+    <mat-form-field appearance="fill">
+      <mat-label>Choose a date</mat-label>
+      <input
+        name="date"
+        id="date"
+        matInput
+        [matDatepicker]="datePicker"
+        formControlName="date"
+        name="date"
+      />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="datePicker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #datePicker></mat-datepicker>
+    </mat-form-field>
 
-    <div class="row d-flex justify-content-center">
-      <mat-form-field appearance="fill">
-        <mat-label>Time Out</mat-label>
-        <input
-          matInput
-          type="time"
-          id="timeOut"
-          name="timeOut"
-          formControlName="timeOut"
-        />
-      </mat-form-field>
-    </div>
+    <mat-form-field appearance="fill">
+      <mat-label>Time In</mat-label>
+      <input
+        matInput
+        type="time"
+        id="timeIn"
+        name="timeIn"
+        formControlName="timeIn"
+      />
+    </mat-form-field>
 
-    <div class="row d-flex justify-content-center">
-      <mat-radio-group
-        class="d-flex flex-column"
-        aria-label="Absent or Holiday"
-        formControlName="holidayOrAbsent"
+    <mat-form-field appearance="fill">
+      <mat-label>Time Out</mat-label>
+      <input
+        matInput
+        type="time"
+        id="timeOut"
+        name="timeOut"
+        formControlName="timeOut"
+      />
+    </mat-form-field>
+
+    <mat-radio-group
+      class="d-flex flex-column"
+      aria-label="Absent or Holiday"
+      formControlName="holidayOrAbsent"
+    >
+      <mat-radio-button name="isAbsent" value="absent">Absent</mat-radio-button>
+      <mat-radio-button name="isHoliday" value="holiday"
+        >Holiday</mat-radio-button
       >
-        <mat-radio-button name="isAbsent" value="absent"
-          >Absent</mat-radio-button
-        >
-        <mat-radio-button name="isHoliday" value="holiday"
-          >Holiday</mat-radio-button
-        >
-      </mat-radio-group>
-    </div>
-  </div>
-  <div class="modal-footer text-center">
-    <button type="button" class="btn btn-secondary" (click)="modalRef.close()">
+    </mat-radio-group>
+  </mat-dialog-content>
+  <div mat-dialog-actions fxLayout="row" fxLayoutAlign="flex-end">
+    <button mat-button mat-dialog-close="" cdkFocusInitial>
       Cancel
     </button>
-    <input
+    <button
+      mat-button
       type="submit"
       [disabled]="timesheetForm.errors?.['invalidTime'] && (timesheetForm.touched || timesheetForm.dirty)"
       class="btn btn-primary"
-      value="Save"
-    />
+    >
+      Save
+    </button>
   </div>
 </form>

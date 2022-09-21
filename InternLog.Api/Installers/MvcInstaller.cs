@@ -38,18 +38,6 @@ namespace InternLog.Api.Installers
 
 			services.AddCors();
 
-			TypeAdapterConfig<Timesheet, GetTimesheetResponse>
-				.NewConfig()
-				.Map(dest => dest.Date, src => src.Date.ToDateTime(TimeOnly.FromTimeSpan(TimeSpan.Zero), DateTimeKind.Local))
-				.Map(dest => dest.TimeIn, src => src.Date.ToDateTime(src.TimeIn, DateTimeKind.Local))
-				.Map(dest => dest.TimeOut, src => src.Date.ToDateTime(src.TimeOut, DateTimeKind.Local));
-
-			TypeAdapterConfig<Timesheet, CreateTimesheetResponse>
-				.NewConfig()
-				.Map(dest => dest.Date, src => src.Date.ToDateTime(TimeOnly.FromTimeSpan(TimeSpan.Zero), DateTimeKind.Local))
-				.Map(dest => dest.TimeIn, src => src.Date.ToDateTime(src.TimeIn, DateTimeKind.Local))
-				.Map(dest => dest.TimeOut, src => src.Date.ToDateTime(src.TimeOut, DateTimeKind.Local));
-
 			return Task.CompletedTask;
 		}
 	}

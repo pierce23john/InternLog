@@ -12,74 +12,62 @@
 
         @if (Model.EnableLocalLogin)
         {
-            <div class="col-sm-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h2>Local Account</h2>
-                    </div>
+            <div class="col s12">
+                <div class="row">
+                    <form asp-route="Login">
+                        <input type="hidden" asp-for="ReturnUrl" />
 
-                    <div class="card-body">
-                        <form asp-route="Login">
-                            <input type="hidden" asp-for="ReturnUrl" />
+                        <div class="input-field">
+                            <input class="validate" placeholder="Username" asp-for="Username" autofocus>
+                            <label asp-for="Username"></label>
+                        </div>
+                        <div class="input-field">
+                            <input type="password" class="validate" placeholder="Password" asp-for="Password" autocomplete="off">
+                            <label asp-for="Password"></label>
+                        </div>
+                        @if (Model.AllowRememberLogin)
+                        {
+                            <p>
+                                <label>
+                                    <input type="checkbox" class="filled-in" asp-for="RememberLogin" />
+                                    <span>Remember my Login</span>
+                                </label>
+                            </p>
+                        }
 
-                            <div class="form-group">
-                                <label asp-for="Username"></label>
-                                <input class="form-control" placeholder="Username" asp-for="Username" autofocus>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="Password"></label>
-                                <input type="password" class="form-control" placeholder="Password" asp-for="Password" autocomplete="off">
-                            </div>
-                            @if (Model.AllowRememberLogin)
-                            {
-                                <div class="form-group">
-                                    <div class="form-check">
-                                        <input class="form-check-input" asp-for="RememberLogin">
-                                        <label class="form-check-label" asp-for="RememberLogin">
-                                            Remember My Login
-                                        </label>
-                                    </div>
-                                </div>
-                            }
 
+                        <button class="btn btn-primary" name="button" value="login">Login</button>
+                        <button class="btn btn-secondary" name="button" value="cancel">Cancel</button>
+
+                        <div>
+                            <p>The default users are alice/bob, password: Pass123$</p>
+                        </div>
+
+                        @if (Model.ExternalProviders.Any())
+                        {
                             <div>
-                                <p>The default users are alice/bob, password: Pass123$</p>
+                                <p>Or use an External Account:</p>
+                                <ul class="list-inline">
+                                    @foreach (var provider in Model.VisibleExternalProviders)
+                                    {
+                                        <li class="list-inline-item">
+                                            <a class="btn"
+                                   asp-controller="External"
+                                   asp-action="Challenge"
+                                   asp-route-scheme="@provider.AuthenticationScheme"
+                                   asp-route-returnUrl="@Model.ReturnUrl">
+                                                <i class="material-icons fa-2xs fa-brands fa-google"></i> @provider.DisplayName
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
                             </div>
-
-                            <button class="btn btn-primary" name="button" value="login">Login</button>
-                            <button class="btn btn-secondary" name="button" value="cancel">Cancel</button>
-                        </form>
-                    </div>
+                        }
+                    </form>
                 </div>
             </div>
         }
 
-        @if (Model.VisibleExternalProviders.Any())
-        {
-            <div class="col-sm-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h2>External Account</h2>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-inline">
-                            @foreach (var provider in Model.VisibleExternalProviders)
-                            {
-                                <li class="list-inline-item">
-                                    <a class="btn btn-secondary"
-                                       asp-controller="External"
-                                       asp-action="Challenge"
-                                       asp-route-scheme="@provider.AuthenticationScheme"
-                                       asp-route-returnUrl="@Model.ReturnUrl">
-                                        @provider.DisplayName
-                                    </a>
-                                </li>
-                            }
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        }
 
         @if (!Model.EnableLocalLogin && !Model.VisibleExternalProviders.Any())
         {

@@ -8,7 +8,30 @@
     }
 }
 
-<div class="nav-page">
+
+
+
+@*<nav class="navbar navbar-expand-lg navbar-light bg-primary">
+    <div class="container-fluid d-flex justify-content-end">
+        @if (!string.IsNullOrWhiteSpace(name))
+        {
+            <div class="navbar-nav justify-content-end">
+                <a class="me-2 nav-link text-light">Hello @name</a>
+                <a class="me-2-nav-link text-light" asp-action="Logout" asp-controller="Account">Logout</a>
+            </div>
+        }
+        else
+        {
+            <div class="navbar-nav justify-content-end">
+                <a class="me-2 nav-link text-light">Login</a>
+                <a class="me-2-nav-link text-light" asp-action="Logout" asp-controller="Account">Register</a>
+            </div>
+        }
+    </div>
+</nav>*@
+
+
+@*<div class="nav-page">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 
         <a href="~/" class="navbar-brand">
@@ -21,13 +44,14 @@
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">@name <b class="caret"></b></a>
-                    
+
                     <div class="dropdown-menu">
                         <a class="dropdown-item" asp-action="Logout" asp-controller="Account">Logout</a>
                     </div>
-              </li>
+                </li>
             </ul>
         }
-    
+
     </nav>
 </div>
+*@

@@ -1,7 +1,7 @@
 import { DatePipe } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { MatRadioChange } from "@angular/material/radio";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { timeValidator } from "@app/core/validators/timeValidator";
 import {
   CreateTimesheetRequest,
@@ -9,14 +9,19 @@ import {
 } from "@app/data/models/timesheet";
 
 import { TimesheetService } from "@app/data/service/timesheet.service";
-import { MdbModalRef } from "mdb-angular-ui-kit/modal";
+import { createDateFromTimeString } from "@app/shared/helpers/timeHelpers";
 
 @Component({
   selector: "new-timesheet-modal",
   templateUrl: "new-timesheet-modal.component.html",
+  styleUrls: ["./new-timesheet-modal.component.scss"],
 })
 export class NewTimesheetModalComponent implements OnInit {
   private datePipe: DatePipe;
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 
   date = new FormControl(new Date());
   timeIn = new FormControl("");
@@ -34,8 +39,8 @@ export class NewTimesheetModalComponent implements OnInit {
   );
 
   constructor(
-    public modalRef: MdbModalRef<NewTimesheetModalComponent>,
-    private timesheetService: TimesheetService
+    private timesheetService: TimesheetService,
+    public dialogRef: MatDialogRef<NewTimesheetModalComponent>
   ) {
     this.datePipe = new DatePipe("en-PH");
   }
@@ -48,8 +53,8 @@ export class NewTimesheetModalComponent implements OnInit {
   saveTimesheet() {
     console.log(this.timesheetForm.value);
     const request: CreateTimesheetRequest = {
-      timeIn: this.timeIn.value,
-      timeOut: this.timeOut.value,
+      timeIn: createDateFromTimeString(this.timeIn.value),
+      timeOut: createDateFromTimeString(this.timeOut.value),
       date: new Date(this.date.value),
       isHoliday: this.holidayOrAbsent.value === "holiday",
       isAbsent: this.holidayOrAbsent.value === "absent",
@@ -64,9 +69,7 @@ export class NewTimesheetModalComponent implements OnInit {
       error: (error) => {
         console.error(error);
       },
-      complete: () => {
-        this.modalRef.close(response.id);
-      },
+      complete: () => {},
     });
   }
 }

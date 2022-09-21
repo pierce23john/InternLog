@@ -65,11 +65,9 @@ namespace InternLog.IntegrationTests
 
 		public void Dispose()
 		{
-			using (var scope = _serviceProvider.CreateScope())
-			{
-				var dbContext = scope.ServiceProvider.GetService<SqlDataContext>();
-				dbContext.Database.EnsureDeleted();
-			}
+			using var scope = _serviceProvider.CreateScope();
+			var dbContext = scope.ServiceProvider.GetService<SqlDataContext>();
+			dbContext.Database.EnsureDeleted();
 		}
 	}
 }

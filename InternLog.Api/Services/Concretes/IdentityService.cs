@@ -17,17 +17,15 @@ namespace InternLog.Api.Services.Concretes
 	{
 		private readonly SignInManager<ApplicationUser> _signInManager;
 		private readonly JwtOptions _jwtOptions;
-		private readonly TokenValidationParameters _tokenValidationParameters;
 		private readonly SqlDataContext _dataContext;
 		private readonly IEmailService _emailService;
 		private readonly ILinkGeneratorService _linkGeneratorService;
 		private readonly UserManager<ApplicationUser> _userManager;
 
-		public IdentityService(SignInManager<ApplicationUser> signInManager, JwtOptions jwtOptions, TokenValidationParameters tokenValidationParameters, SqlDataContext dataContext, IEmailService emailService, ILinkGeneratorService linkGeneratorService)
+		public IdentityService(SignInManager<ApplicationUser> signInManager, JwtOptions jwtOptions, SqlDataContext dataContext, IEmailService emailService, ILinkGeneratorService linkGeneratorService)
 		{
 			_signInManager = signInManager;
 			_jwtOptions = jwtOptions;
-			_tokenValidationParameters = tokenValidationParameters;
 			_dataContext = dataContext;
 			_emailService = emailService;
 			_linkGeneratorService = linkGeneratorService;
@@ -135,62 +133,6 @@ namespace InternLog.Api.Services.Concretes
 			};
 		}
 
-		public async Task<AuthenticationResult> RefreshTokenAsync(string token, string refreshToken)
-		{
-			var principal = GetPrincipalFromToken(token);
-
-			if (principal == null)
-			{
-				return new AuthenticationResult { Errors = new[] { "Invalid Token" } };
-			}
-
-			long expiryDateInUnix = Convert.ToInt64(principal.FindFirstValue(JwtRegisteredClaimNames.Exp));
-
-			//var expiryDateTimeUtc = DateTime.UnixEpoch.AddSeconds(expiryDateInUnix)
-			//	.Subtract(_jwtOptions.TokenLifetime);
-
-			//if (expiryDateTimeUtc > DateTime.UtcNow)
-			//{
-			//	return new AuthenticationResult() { Errors = new[] { "This token hasn't expired yet" } };
-			//}
-
-			var storedRefreshToken = await _dataContext.Set<RefreshToken>().SingleOrDefaultAsync(refreshTokenInDb => refreshTokenInDb.Id == Guid.Parse(refreshToken));
-
-			if (storedRefreshToken == null)
-			{
-				return new AuthenticationResult() { Errors = new[] { "This token doesn't exist." } };
-			}
-
-			if (DateTime.UtcNow > storedRefreshToken.ExpiryDate)
-			{
-				return new AuthenticationResult() { Errors = new[] { "This refresh token is expired." } };
-			}
-
-			if (storedRefreshToken.Invalidated)
-			{
-				return new AuthenticationResult() { Errors = new[] { "This refresh token has been invalidated" } };
-			}
-
-			if (storedRefreshToken.Used)
-			{
-				return new AuthenticationResult() { Errors = new[] { "This refresh token has been used" } };
-			}
-
-			var jwtId = principal.FindFirstValue(JwtRegisteredClaimNames.Jti);
-			if (storedRefreshToken.JwtId != jwtId)
-			{
-				return new AuthenticationResult() { Errors = new[] { "This refresh token does not match this JWT." } };
-			}
-
-			storedRefreshToken.Used = true;
-			_dataContext.Update(storedRefreshToken);
-			await _dataContext.SaveChangesAsync();
-
-			var user = await _userManager.FindByIdAsync(principal.FindFirstValue("id"));
-
-			return await GenerateAuthenticationResultForUserAsync(user);
-		}
-
 		private async Task<AuthenticationResult> GenerateAuthenticationResultForUserAsync(ApplicationUser user)
 		{
 			var tokenId = Guid.NewGuid().ToString();
@@ -227,31 +169,6 @@ namespace InternLog.Api.Services.Concretes
 				Token = jwtToken,
 				RefreshToken = refreshToken.Id.ToString()
 			};
-		}
-
-		private ClaimsPrincipal GetPrincipalFromToken(string token)
-		{
-			var tokenHandler = new JwtSecurityTokenHandler();
-
-			try
-			{
-				var principal = tokenHandler.ValidateToken(token, _tokenValidationParameters, out var validatedToken);
-				if (!IsJwtWithValidSecurityAlgorithm(validatedToken))
-				{
-					return null;
-				}
-				return principal;
-			}
-			catch (Exception)
-			{
-				return null;
-			}
-		}
-
-		private bool IsJwtWithValidSecurityAlgorithm(SecurityToken validatedToken)
-		{
-			return validatedToken is JwtSecurityToken jwtSecurityToken
-				&& jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase);
 		}
 	}
 }

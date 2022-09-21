@@ -1,0 +1,21 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "font-awesome@6.2.0",
+      "files": [ "css/all.css", "js/all.js" ],
+      "destination": "wwwroot/lib/fontawesome/"
+    },
+    {
+      "library": "materialize@1.0.0",
+      "destination": "wwwroot/lib/materialize"
+    },
+    {
+      "library": "material-components-web@14.0.0",
+      "destination": "wwwroot/lib/material-components-web",
+      "files": [ "dist/material-components-web.css", "dist/material-components-web.js" ],
+      "provider": "unpkg"
+    }
+  ]
+}

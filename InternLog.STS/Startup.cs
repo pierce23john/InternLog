@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using IdentityServer4;
+using InternLog.Data;
 using InternLog.Domain.Entities;
-using InternLog.STS.Data;
-
+using InternLog.STS.Services.Concretes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -31,11 +31,11 @@ namespace InternLog.STS
 		{
 			services.AddControllersWithViews();
 
-			services.AddDbContext<ApplicationDbContext>(options =>
+			services.AddDbContext<SqlDataContext>(options =>
 				options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
 			services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
-				.AddEntityFrameworkStores<ApplicationDbContext>()
+				.AddEntityFrameworkStores<SqlDataContext>()
 				.AddDefaultTokenProviders();
 
 			var builder = services.AddIdentityServer(options =>
@@ -49,9 +49,11 @@ namespace InternLog.STS
 				options.EmitStaticAudienceClaim = true;
 			})
 				.AddInMemoryIdentityResources(Config.IdentityResources)
+				.AddInMemoryApiResources(Config.ApiResources)
 				.AddInMemoryApiScopes(Config.ApiScopes)
 				.AddInMemoryClients(Config.Clients)
-				.AddAspNetIdentity<ApplicationUser>();
+				.AddAspNetIdentity<ApplicationUser>()
+				.AddProfileService<CustomProfileService>();
 
 			// not recommended for production - you need to store your key material somewhere secure
 			builder.AddDeveloperSigningCredential();
