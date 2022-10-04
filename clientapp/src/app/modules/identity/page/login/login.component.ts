@@ -1,7 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { AuthService } from "@app/core/service/auth.service";
 import { LoginRequest } from "@app/data/models/login";
-import { OidcSecurityService } from "angular-auth-oidc-client";
 
 @Component({
   selector: "login",
@@ -15,9 +14,9 @@ export class LoginComponent implements OnInit {
 
   constructor(private authService: AuthService) {}
 
-  ngOnInit(): void {
-    this.authService.login();
-  }
+  ngOnInit(): void {}
 
-  login() {}
+  login() {
+    this.authService.login(this.loginRequest);
+  }
 }

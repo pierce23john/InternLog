@@ -9,17 +9,11 @@ import { AuthService } from "@app/core/service/auth.service";
 export class ContentLayoutComponent implements OnInit {
   opened: boolean = true;
 
-  userData$ = this.authService.userData$;
-
   constructor(public authService: AuthService) {}
 
   ngOnInit(): void {}
 
-  login() {
-    this.authService.login();
-  }
+  login() {}
 
-  logout(): void {
-    this.authService.logout();
-  }
+  logout(): void {}
 }

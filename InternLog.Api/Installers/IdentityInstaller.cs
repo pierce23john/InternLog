@@ -3,12 +3,11 @@ using InternLog.Api.Services.Concretes;
 using InternLog.Api.Services.Contracts;
 using InternLog.Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using FastEndpoints.Security;
 using InternLog.Data;
-using IdentityServer4.AccessTokenValidation;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Options;
 
 namespace InternLog.Api.Installers
 {
@@ -23,27 +22,31 @@ namespace InternLog.Api.Installers
 			services.AddScoped<IEmailService, EmailService>();
 			services.AddScoped<IIdentityService, IdentityService>();
 
-			services.AddAuthentication(config =>
+			services.AddAuthentication((AuthenticationOptions o) =>
 			{
-				config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-				config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-			})
-						.AddJwtBearer(options =>
-						{
-							// base-address of your identityserver
-							options.Authority = "https://localhost:5001";
-
-							// if you are using API resources, you can specify the name here
-							options.Audience = "internlog-api";
-								
-
-							// IdentityServer emits a typ header by default, recommended extra check
-							options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
-						});
+				o.DefaultScheme = IdentityConstants.ApplicationScheme;
+				o.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+			}).AddIdentityCookies(identityCookies =>
+			{
+				identityCookies.ApplicationCookie.Configure(cookieOptions =>
+				{
+					cookieOptions.SlidingExpiration = true;
+					cookieOptions.Cookie.HttpOnly = false;
+					cookieOptions.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+					cookieOptions.Cookie.SameSite = SameSiteMode.None;
+					cookieOptions.Cookie.Domain = "localhost";
+				});
+			});
 
 			services
-				.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
-				.AddEntityFrameworkStores<SqlDataContext>();
+				.AddIdentityCore<ApplicationUser>(options =>
+				{
+					options.SignIn.RequireConfirmedAccount = false;
+					options.Stores.MaxLengthForKeys = 128;
+				})
+				.AddDefaultTokenProviders()
+				.AddEntityFrameworkStores<SqlDataContext>()
+				.AddSignInManager<SignInManager<ApplicationUser>>();
 
 			return Task.CompletedTask;
 		}

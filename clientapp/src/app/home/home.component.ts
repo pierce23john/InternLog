@@ -17,7 +17,6 @@ import {
   Observable,
 } from "rxjs";
 import { Timesheet } from "@app/data/schema/timesheet";
-import { OidcSecurityService } from "angular-auth-oidc-client";
 import { AuthService } from "@app/core/service/auth.service";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { MatPaginator } from "@angular/material/paginator";
@@ -80,7 +79,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     })
   );
 
-  userData$ = this.authService.userData$;
+  // userData$ = this.authService.userData$;
 
   displayedColumns: string[] = [
     "date",

@@ -5,37 +5,34 @@ import { LoginResponse } from "@app/data/models/login";
 import ApiV1Routes from "../constants/apiV1Routes";
 import { Router } from "@angular/router";
 import { LoginRequest } from "@app/data/models/login";
-import { OidcSecurityService } from "angular-auth-oidc-client";
 import { environment } from "@env";
+import { CookieService } from "ngx-cookie";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthService {
-  userData$ = this.oidcSecurityService.getUserData(environment.configId);
-
   constructor(
     private router: Router,
-    private oidcSecurityService: OidcSecurityService
-  ) {}
+    private cookieService: CookieService,
+    private http: HttpClient
+  ) {
+    console.log(cookieService.getAll())
+  }
 
-  login(): void {
-    this.oidcSecurityService.authorize();
+  login(loginRequest: LoginRequest): void {
+    this.http
+      .post(
+        ApiV1Routes.Identity.Login,
+        { email: loginRequest.username, password: loginRequest.password },
+        {
+          withCredentials: true,
+        }
+      )
+      .subscribe((next) => console.log({ next }));
   }
 
   logout(): Observable<boolean> {
-    this.oidcSecurityService.logoff();
     return of(false);
-  }
-
-  public get isLoggedIn(): boolean {
-    let isLoggedIn = false;
-    this.oidcSecurityService.isAuthenticated$.subscribe(
-      ({ isAuthenticated }) => {
-        isLoggedIn = isAuthenticated;
-      }
-    );
-
-    return isLoggedIn;
   }
 }

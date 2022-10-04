@@ -31,8 +31,6 @@ namespace InternLog.Api.Features.V1.Identity.Login
 		public override async Task HandleAsync(LoginUserRequest request, CancellationToken c)
 		{
 			AuthenticationResult loginResult = await _identityService.LoginAsync(request.Email, request.Password);
-			HttpContext.Response.Cookies.Append("refreshToken", loginResult.RefreshToken, new() { SameSite = SameSiteMode.None, Domain = ".app.localhost", HttpOnly = true, Expires = DateTime.UtcNow.AddMonths(6), Secure = true });
-
 			await SendAsync(Map.FromEntity(loginResult), loginResult.Success ? (int)HttpStatusCode.OK : (int)HttpStatusCode.BadRequest, c);
 		}
 	}

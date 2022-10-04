@@ -16,19 +16,19 @@ namespace InternLog.Api.Services.Concretes
 	public class IdentityService : IIdentityService
 	{
 		private readonly SignInManager<ApplicationUser> _signInManager;
-		private readonly JwtOptions _jwtOptions;
 		private readonly SqlDataContext _dataContext;
 		private readonly IEmailService _emailService;
 		private readonly ILinkGeneratorService _linkGeneratorService;
+		private readonly IHttpContextAccessor _httpContextAccessor;
 		private readonly UserManager<ApplicationUser> _userManager;
 
-		public IdentityService(SignInManager<ApplicationUser> signInManager, JwtOptions jwtOptions, SqlDataContext dataContext, IEmailService emailService, ILinkGeneratorService linkGeneratorService)
+		public IdentityService(SignInManager<ApplicationUser> signInManager, SqlDataContext dataContext, IEmailService emailService, ILinkGeneratorService linkGeneratorService, IHttpContextAccessor httpContextAccessor)
 		{
 			_signInManager = signInManager;
-			_jwtOptions = jwtOptions;
 			_dataContext = dataContext;
 			_emailService = emailService;
 			_linkGeneratorService = linkGeneratorService;
+			_httpContextAccessor = httpContextAccessor;
 			_userManager = signInManager.UserManager;
 		}
 
@@ -137,37 +137,21 @@ namespace InternLog.Api.Services.Concretes
 		{
 			var tokenId = Guid.NewGuid().ToString();
 
-			var jwtToken = JWTBearer.CreateToken(
-				signingKey: _jwtOptions.Secret,
-				expireAt: DateTime.UtcNow.Add(_jwtOptions.TokenLifetime),
-				permissions: null,
-				roles: null,
-				claims: new (string claimType, string claimValue)[]
-				{
-					("id", user.Id.ToString()),
-					(JwtRegisteredClaimNames.Jti, tokenId),
-					(JwtRegisteredClaimNames.Sub, user.Email),
-					(JwtRegisteredClaimNames.Email, user.Email),
-					(JwtRegisteredClaimNames.GivenName, user.GivenName),
-					(JwtRegisteredClaimNames.FamilyName, user.Surname),
-				});
-
-			RefreshToken refreshToken = new()
+			List<Claim> claims = new()
 			{
-				JwtId = tokenId,
-				CreationDate = DateTime.UtcNow,
-				UserId = user.Id,
-				ExpiryDate = DateTime.UtcNow.AddMonths(6),
+					new("id", user.Id.ToString()),
+					new(JwtRegisteredClaimNames.Jti, tokenId),
+					new(JwtRegisteredClaimNames.Sub, user.Email),
+					new(JwtRegisteredClaimNames.Email, user.Email),
+					new(JwtRegisteredClaimNames.GivenName, user.GivenName),
+					new(JwtRegisteredClaimNames.FamilyName, user.Surname),
 			};
 
-			await _dataContext.AddAsync(refreshToken);
-			await _dataContext.SaveChangesAsync();
+			await _signInManager.SignInWithClaimsAsync(user, false, claims);
 
 			return new AuthenticationResult()
 			{
 				Success = true,
-				Token = jwtToken,
-				RefreshToken = refreshToken.Id.ToString()
 			};
 		}
 	}

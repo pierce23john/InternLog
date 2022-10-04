@@ -4,10 +4,7 @@ global using FluentValidation;
 using DateOnlyTimeOnly.AspNet.Converters;
 using InternLog.Api.Extensions;
 using InternLog.Api.Options;
-using System.Text.Json;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using InternLog.Api.Converters;
-using static IdentityServer4.IdentityServerConstants;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +26,11 @@ else
 	app.UseHsts();
 }
 
-app.UseCors(builder => builder.SetIsOriginAllowed((origin) => origin == "http://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+app.UseCors(corsBuilder => corsBuilder.WithOrigins(builder.Configuration["ClientDomain"])
+.AllowAnyMethod()
+.AllowAnyHeader()
+.AllowCredentials());
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -40,10 +41,9 @@ app.UseFastEndpoints(config =>
 		options.Converters.Add(new CustomDateOnlyJsonConverter());
 		options.Converters.Add(new TimeOnlyJsonConverter());
 	};
-	config.GlobalEndpointOptions = (endpoint, builder) =>
+	config.GlobalEndpointOptions = (endpoint, endpointBuilder) =>
 	{
-
-		builder.RequireCors(x => x.SetIsOriginAllowed((origin) => origin == "http://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials()) // add this produce error
+		endpointBuilder.RequireCors(x => x.WithOrigins(builder.Configuration["ClientDomain"]).AllowAnyHeader().AllowAnyMethod().AllowCredentials()) // add this produce error
 			.ProducesProblem(StatusCodes.Status403Forbidden);
 	};
 });

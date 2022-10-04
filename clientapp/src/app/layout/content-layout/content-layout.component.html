@@ -33,10 +33,11 @@
         mat-flat-button
         color="primary"
         [matMenuTriggerFor]="profileMenu"
-        *ngIf="authService.isLoggedIn && userData$ | async as userData"
+        *ngIf="false"
       >
         <mat-icon>person</mat-icon>
-        {{ userData["given_name"] }} {{ userData["family_name"] }}
+        <!-- {{ userData["given_name"] }} {{ userData["family_name"] }} -->
+        User
       </button>
       <mat-menu #profileMenu="matMenu">
         <button mat-menu-item [routerLink]="['/identity', 'profile']">
