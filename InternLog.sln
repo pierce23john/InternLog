@@ -18,9 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{13C4A6C8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InternLog.UnitTests", "InternLog.UnitTests\InternLog.UnitTests.csproj", "{E6820390-C876-4EE6-BDB0-623C261FA843}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InternLog.STS", "InternLog.STS\InternLog.STS.csproj", "{0B097C7B-5133-4D21-A735-37B7AB0BBA50}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternLog.Data", "InternLog.Data\InternLog.Data.csproj", "{C7F7431D-54EE-41D9-BD96-CD037B4C05CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InternLog.Data", "InternLog.Data\InternLog.Data.csproj", "{C7F7431D-54EE-41D9-BD96-CD037B4C05CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,10 +48,6 @@ Global
 		{E6820390-C876-4EE6-BDB0-623C261FA843}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6820390-C876-4EE6-BDB0-623C261FA843}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6820390-C876-4EE6-BDB0-623C261FA843}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0B097C7B-5133-4D21-A735-37B7AB0BBA50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0B097C7B-5133-4D21-A735-37B7AB0BBA50}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0B097C7B-5133-4D21-A735-37B7AB0BBA50}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0B097C7B-5133-4D21-A735-37B7AB0BBA50}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C7F7431D-54EE-41D9-BD96-CD037B4C05CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C7F7431D-54EE-41D9-BD96-CD037B4C05CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7F7431D-54EE-41D9-BD96-CD037B4C05CD}.Release|Any CPU.ActiveCfg = Release|Any CPU

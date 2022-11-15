@@ -22,6 +22,7 @@
 			public const string Login = Base + "/identity/login";
 			public const string Logout = Base + "/identity/logout";
 			public const string Register = Base + "/identity/register";
+			public const string UserInfo = Base + "/identity/userinfo";
 			public const string ConfirmEmail = Base + "/identity/confirm";
 			public const string RefreshToken = Base + "/identity/refresh";
 		}

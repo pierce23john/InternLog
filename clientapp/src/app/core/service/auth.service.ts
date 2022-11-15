@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { of, Observable, tap } from "rxjs";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpResponse, HttpStatusCode } from "@angular/common/http";
 import { LoginResponse } from "@app/data/models/login";
 import ApiV1Routes from "../constants/apiV1Routes";
 import { Router } from "@angular/router";
@@ -17,22 +17,41 @@ export class AuthService {
     private cookieService: CookieService,
     private http: HttpClient
   ) {
-    console.log(cookieService.getAll())
+    console.log(cookieService.getAll());
   }
 
+  userData$ = this.http.get(ApiV1Routes.Identity.UserInfo);
+
   login(loginRequest: LoginRequest): void {
+    let response: LoginResponse;
+
     this.http
-      .post(
-        ApiV1Routes.Identity.Login,
-        { email: loginRequest.username, password: loginRequest.password },
-        {
-          withCredentials: true,
-        }
-      )
-      .subscribe((next) => console.log({ next }));
+      .post<LoginResponse>(ApiV1Routes.Identity.Login, {
+        email: loginRequest.username,
+        password: loginRequest.password,
+      })
+      .subscribe({
+        next: (value) => {
+          response = value;
+        },
+        complete: () => {
+          this.router.navigate(["app", "home"]);
+        },
+      });
   }
 
   logout(): Observable<boolean> {
-    return of(false);
+    let response: Observable<boolean> = of(false);
+    this.http
+      .post(ApiV1Routes.Identity.Logout, {}, { observe: "response" })
+      .subscribe({
+        next: (res) => {
+          if (res.status == HttpStatusCode.Ok) {
+            this.router.navigate(["identity", "login"]);
+          }
+          response = of(true);
+        },
+      });
+    return response;
   }
 }

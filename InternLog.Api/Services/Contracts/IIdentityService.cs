@@ -1,4 +1,5 @@
 ﻿using InternLog.Domain.Models;
+using System.Security.Claims;
 
 namespace InternLog.Api.Services.Contracts
 {
@@ -9,5 +10,7 @@ namespace InternLog.Api.Services.Contracts
 		Task<AuthenticationResult> ConfirmEmailAsync(Guid userId, string token);
 
 		Task<AuthenticationResult> LoginAsync(string email, string password);
+
+		Task<bool> LogoutAsync();
 	}
 }

@@ -1,8 +1,4 @@
-﻿using FastEndpoints;
-using InternLog.Api.Services.Contracts;
-using Microsoft.AspNetCore.Mvc;
-using System.Net;
-using InternLog.Domain.Models;
+﻿using InternLog.Api.Services.Contracts;
 
 namespace InternLog.Api.Features.V1.Identity.Login
 {
@@ -24,11 +20,8 @@ namespace InternLog.Api.Features.V1.Identity.Login
 
 		public override async Task HandleAsync(EmptyRequest request, CancellationToken c)
 		{
-			foreach (var cookie in HttpContext.Request.Cookies)
-			{
-				HttpContext.Response.Cookies.Delete(cookie.Key);
-			}
-			await SendOkAsync();
+			await _identityService.LogoutAsync();
+			await SendOkAsync(c);
 		}
 	}
 }

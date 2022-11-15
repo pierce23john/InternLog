@@ -1,7 +1,16 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import ApiV1Routes from "@app/core/constants/apiV1Routes";
-import { merge, Observable, Subject, scan, catchError, EMPTY, concatMap } from "rxjs";
+import {
+  merge,
+  Observable,
+  Subject,
+  scan,
+  catchError,
+  EMPTY,
+  concatMap,
+  mergeWith,
+} from "rxjs";
 import { CreateTimesheetRequest } from "../models/timesheet";
 import {
   CreateTimesheetResponse,
@@ -17,27 +26,8 @@ export class TimesheetService {
   private timesheedAddedSubject = new Subject<string>();
   timesheetAddedAction$ = this.timesheedAddedSubject.asObservable();
 
-  timesheets$ = merge(
-    this.httpClient.get<GetTimesheetResponse[]>(ApiV1Routes.Timesheets.GetAll),
-    this.timesheetAddedAction$.pipe(
-      concatMap(id => this.getSingle(id).pipe(
-        catchError((error) => {
-          console.error(error);
-          return EMPTY;
-        })
-      ))
-    )
-  ).pipe(
-    scan(
-      (acc, value) => (value instanceof Array ? [...value] : [...acc, value]),
-      [] as GetTimesheetResponse[]
-    ),
-    catchError((error) => {
-      console.error(error);
-      return EMPTY;
-    })
-  );
-
+  timesheets$ = this.httpClient.get<GetTimesheetResponse[]>(ApiV1Routes.Timesheets.GetAll)
+    
   onTimesheetAdded(timesheetId: string) {
     this.timesheedAddedSubject.next(timesheetId);
   }

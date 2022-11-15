@@ -1,0 +1,14 @@
+.login-component-container {
+  display: grid;
+  place-items: center;
+  min-height: 100%;
+}
+
+.login-card {
+  width: 400px;
+  padding: 50px;
+}
+
+.login-logo {
+  max-width: 100%;
+}

@@ -1,14 +1,9 @@
-﻿using FastEndpoints.Security;
-
-using InternLog.Api.Options;
-using InternLog.Api.Services.Contracts;
+﻿using InternLog.Api.Services.Contracts;
 using InternLog.Data;
 using InternLog.Domain.Entities;
 using InternLog.Domain.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.JsonWebTokens;
 using System.Security.Claims;
 
 namespace InternLog.Api.Services.Concretes
@@ -97,6 +92,12 @@ namespace InternLog.Api.Services.Concretes
 			}
 
 			return await GenerateAuthenticationResultForUserAsync(existingUser);
+		}
+
+		public async Task<bool> LogoutAsync()
+		{
+			await _signInManager.SignOutAsync();
+			return true;
 		}
 
 		public async Task<AuthenticationResult> ConfirmEmailAsync(Guid userId, string token)

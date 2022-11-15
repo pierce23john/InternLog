@@ -6,13 +6,17 @@ import { MatDatepickerModule } from "@angular/material/datepicker";
 import { LoginCallbackComponent } from "./page/login-callback/login-callback.component";
 import { CoreModule } from "@app/core/core.module";
 import { SharedModule } from "@app/shared/shared.module";
-import { ProfileComponent } from './page/profile/profile.component';
+import { ProfileComponent } from "./page/profile/profile.component";
+import { IdentityLayoutComponent } from "@app/layout/identity-layout/identity-layout.component";
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent, LoginCallbackComponent, ProfileComponent],
-  imports: [
-    SharedModule,
-    IdentityRoutingModule,
+  declarations: [
+    LoginComponent,
+    RegisterComponent,
+    LoginCallbackComponent,
+    ProfileComponent,
+    IdentityLayoutComponent,
   ],
+  imports: [SharedModule, IdentityRoutingModule],
 })
 export class IdentityModule {}

@@ -30,12 +30,7 @@
     <!-- <pre *ngIf="userData$ | async as userData">{{ userData | json }}</pre> -->
 
     <div class="mat-elevation-z8">
-      <table
-        mat-table
-        *ngIf="dataSource.data"
-        matSort
-        [dataSource]="dataSource"
-      >
+      <table mat-table *ngIf="dataSource" matSort [dataSource]="dataSource">
         <!--- Note that these columns can be defined in any order.
         The actual rendered columns are set as a property on the row definition" -->
 

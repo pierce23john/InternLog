@@ -13,6 +13,7 @@ export default class ApiV1Routes {
      static Logout = ApiV1Routes.Base + "/identity/logout";
     static Register = ApiV1Routes.Base + "/identity/register";
     static ConfirmEmail = ApiV1Routes.Base + "/identity/confirm";
+    static UserInfo = ApiV1Routes.Base + "/identity/userinfo";
     static Refresh = ApiV1Routes.Base + "/identity/refresh";
     static AllRoutes = Object.values(this).map(value => `${value}`);
   };

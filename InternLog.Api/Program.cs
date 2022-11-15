@@ -3,7 +3,6 @@ global using FastEndpoints.Swagger;
 global using FluentValidation;
 using DateOnlyTimeOnly.AspNet.Converters;
 using InternLog.Api.Extensions;
-using InternLog.Api.Options;
 using InternLog.Api.Converters;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,9 +10,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.InstallServicesFromAssembly(builder.Configuration);
 var app = builder.Build();
-
-var swaggerOptions = new SwaggerOptions();
-builder.Configuration.Bind(nameof(SwaggerOptions), swaggerOptions);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -27,9 +23,10 @@ else
 }
 
 app.UseCors(corsBuilder => corsBuilder.WithOrigins(builder.Configuration["ClientDomain"])
-.AllowAnyMethod()
-.AllowAnyHeader()
-.AllowCredentials());
+	.AllowCredentials()
+	.AllowAnyMethod()
+	.AllowAnyHeader()
+);
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -15,5 +15,7 @@ export class ContentLayoutComponent implements OnInit {
 
   login() {}
 
-  logout(): void {}
+  logout(): void {
+    this.authService.logout().subscribe();
+  }
 }

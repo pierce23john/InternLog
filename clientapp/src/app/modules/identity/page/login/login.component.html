@@ -1,63 +1,73 @@
-<main class="text-center">
+<main class="login-component-container">
   <form (ngSubmit)="login()" #form="ngForm">
-    <div class="row">
-      <div class="mt-5">
-        <img
-          style="border: 0; width: 250px; height: 250px"
-          src="assets/images/internlog-logo.jpg"
-          thumbnail
-          fluid
-          class="mt-5"
-        />
-      </div>
-    </div>
+    <mat-card fxLayout="column" class="login-card mat-elevation-z3">
+      <img
+        mat-card-lg-image
+        fxFlexAlign="center"
+        fxLayoutAlign="center"
+        src="assets/images/internlog-logo.jpg"
+        thumbnail
+        fluid
+      />
 
-    <div class="row justify-content-center">
-      <div class="col-md-offset-3 col-md-3">
-        <label for="username" class="mx-auto"> Username </label>
-        <input
-          required
-          [(ngModel)]="loginRequest.username"
-          name="username"
-          class="form-control rounded-3 mx-auto"
-          type="text"
-          id="username"
-          #username="ngModel"
-        />
-      </div>
-    </div>
+      <mat-card-content fxLayout="column">
+        <mat-form-field>
+          <mat-label>Username</mat-label>
+          <input
+            matInput
+            required
+            [(ngModel)]="loginRequest.username"
+            name="username"
+            class="form-control rounded-3 mx-auto"
+            type="text"
+            id="username"
+            #username="ngModel"
+            placeholder="Username"
+          />
+          <mat-error
+            *ngIf="username.invalid && (username.dirty || username.touched)"
+            class="text-danger"
+          >
+            Please enter a valid username.
+          </mat-error>
+        </mat-form-field>
 
-    <div class="row justify-content-center">
-      <div class="col-md-offset-3 col-md-3 col-sm-6">
-        <label for="password">Password</label>
-        <input
-          [(ngModel)]="loginRequest.password"
-          name="password"
-          class="form-control rounded-3 mx-auto"
-          type="password"
-          id="password"
-          #password="ngModel"
-        />
-      </div>
-    </div>
+        <mat-form-field>
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            required
+            [(ngModel)]="loginRequest.password"
+            name="password"
+            class="form-control rounded-3 mx-auto"
+            type="password"
+            id="password"
+            #password="ngModel"
+          />
+          <mat-error
+            *ngIf="password.invalid && (password.dirty || password.touched)"
+            class="text-danger"
+          >
+            Please enter a password.
+          </mat-error>
+        </mat-form-field>
+      </mat-card-content>
 
-    <div
-      class="text-danger"
-      *ngIf="username.invalid && (username.dirty || username.touched)"
-    >
-      Please enter a valid username.
-    </div>
-
-    <div class="row justify-content-center">
-      <div class="col-md-offset-2 col-md-4 w-50 col-sm-6">
+      <mat-card-actions class="" fxLayout="row" fxLayoutAlign="space-between">
+        <a fxFlex="1 1 45%" mat-flat-button type="button">
+          Create a New Account
+        </a>
         <button
-          [disabled]="!loginRequest.username && !loginRequest.password"
-          class="btn btn-primary btn-sm"
+          fxFlex="1 1 25%"
+          mat-flat-button
+          color="primary"
+          [disabled]="username.invalid || password.invalid"
           type="submit"
         >
           Login
         </button>
-      </div>
-    </div>
+      </mat-card-actions>
+      <mat-card-footer></mat-card-footer>
+    </mat-card>
   </form>
 </main>

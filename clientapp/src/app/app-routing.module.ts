@@ -3,6 +3,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { AuthGuard } from "./core/guard/auth.guard";
 import { HomeComponent } from "./home/home.component";
 import { ContentLayoutComponent } from "./layout/content-layout/content-layout.component";
+import { IdentityLayoutComponent } from "./layout/identity-layout/identity-layout.component";
 import { TimesheetsResolver } from "./shared/timesheets.resolver";
 
 const routes: Routes = [
@@ -20,7 +21,7 @@ const routes: Routes = [
   },
   {
     path: "identity",
-    component: ContentLayoutComponent,
+    component: IdentityLayoutComponent,
     loadChildren: () =>
       import("@modules/identity/identity.module").then((m) => m.IdentityModule),
   },
